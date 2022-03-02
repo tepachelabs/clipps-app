@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Video } from "../../models";
-import { Header, VideoList, VideoUpload } from "../../components";
+import { VideoList, VideoUpload } from "../../components";
 import { fetchVideos, selectToken, selectVideos } from "../../reducers";
 
 const Box = styled.div`
