@@ -33,6 +33,7 @@ export const create = (token: string, selectedFile: Blob, config?: Partial<Axios
   return http.post<Video>("/videos", formData, {
     ...config,
     headers: {
+      "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${token}`,
     },
   });
