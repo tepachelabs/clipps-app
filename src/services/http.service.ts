@@ -1,7 +1,10 @@
 import axios from "axios";
+import config from "../config";
+
+const { apiGatewayUrl } = config;
 
 export const http = axios.create({
-  baseURL: "https://api.clipps.io/api",
+  baseURL: apiGatewayUrl,
   headers: {
     "Content-type": "application/json",
   },
