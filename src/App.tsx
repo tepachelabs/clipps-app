@@ -5,9 +5,16 @@ import { Box, Container, CssBaseline } from "@mui/material";
 import { Header, RequireAuth } from "./components";
 import { Dashboard, Login, Settings, Watch } from "./domains";
 
+const styles = {
+  container: {
+    // backgroundColor: "#fefefe",
+    // backgroundColor: "#000",
+  },
+};
+
 export const App = () => {
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" sx={styles.container}>
       <CssBaseline />
       <Header />
       <Box pt={8}>

@@ -1,12 +1,23 @@
 import React, { memo, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { formatDistance } from "date-fns";
 
 import { Video } from "../../models";
 import { getByAssetId, update } from "../../services";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { fetchVideos, selectIsAuthenticated, selectToken } from "../../reducers";
-import { EditableLabel } from "../../components";
-import { Card, CardActions, CardContent, CardMedia, Grid, Typography } from "@mui/material";
+import { ClickToCopyButton, EditableLabel } from "../../components";
+import {
+  Breadcrumbs,
+  Card,
+  CardContent,
+  CardMedia,
+  Grid,
+  Link as MuiLink,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { NotFound } from "../not-found";
 
 const styles = {
   video: {
@@ -31,7 +42,7 @@ const WatchComponent: React.FC = () => {
     void fetchVideo();
   }, [assetId]);
 
-  if (!video) return null;
+  if (!video) return <NotFound />;
 
   const onTitleUpdate = async (editedValue: string) => {
     if (!isAuthenticated || !assetId) return;
@@ -45,24 +56,34 @@ const WatchComponent: React.FC = () => {
 
   return (
     <Grid container spacing={3} pt={4}>
+      {isAuthenticated && (
+        <Grid item xs={12}>
+          <Breadcrumbs aria-label="breadcrumb">
+            <MuiLink color="inherit" component={Link} to="/">
+              Dashboard
+            </MuiLink>
+            <Typography color="text.primary">{video.title}</Typography>
+          </Breadcrumbs>
+        </Grid>
+      )}
       <Grid item xs={12}>
-        <Card>
+        <Card variant="outlined">
           <CardMedia component="video" src={video.secure_url} controls sx={styles.video} />
           <CardContent>
-            <EditableLabel
-              value={video.title}
-              onCommit={onTitleUpdate}
-              isDisabled={!isAuthenticated}
-            />
+            <Stack direction="row" spacing={2} justifyContent="space-between">
+              <EditableLabel
+                value={video.title}
+                onCommit={onTitleUpdate}
+                isDisabled={!isAuthenticated}
+              />
+              <ClickToCopyButton label="Share" value={`https://clipps.io/w/${video.asset_id}`} />
+            </Stack>
+            <Stack direction="row" spacing={2}>
+              <Typography variant="body2" color="text.secondary">
+                Uploaded {formatDistance(date, new Date(), { addSuffix: true })}
+              </Typography>
+            </Stack>
           </CardContent>
-          <CardActions>
-            <Typography variant="body2" color="text.secondary">
-              Uploaded: {date.toDateString()}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Duration: {video.duration}s
-            </Typography>
-          </CardActions>
         </Card>
       </Grid>
     </Grid>

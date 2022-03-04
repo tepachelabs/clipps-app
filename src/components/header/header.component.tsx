@@ -1,12 +1,16 @@
 import React, { SyntheticEvent, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { AppBar, Button, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Button, Toolbar } from "@mui/material";
 
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectIsAuthenticated, setToken, setVideos } from "../../reducers";
 
 const styles = {
-  title: { flexGrow: 1 },
+  appBar: {
+    backgroundColor: "#fff",
+    borderBottom: "1px solid #eee",
+    boxShadow: 0,
+  },
 };
 
 export const Header: React.FC = () => {
@@ -23,25 +27,27 @@ export const Header: React.FC = () => {
   );
 
   return (
-    <AppBar sx={{ boxShadow: "none" }}>
+    <AppBar sx={styles.appBar}>
       <Toolbar>
-        <Typography variant="h6" component="div" sx={styles.title}>
-          Clipps
-        </Typography>
+        <Box flexGrow={1} justifyContent="flex-start">
+          <Button color="secondary" component={Link} to="/">
+            Clipps
+          </Button>
+        </Box>
         {isAuthenticated ? (
           <>
-            <Button color="inherit" component={Link} to="/">
+            <Button color="secondary" component={Link} to="/">
               Dashboard
             </Button>
             {/*<Button color="inherit" component={Link} to="/settings">*/}
             {/*  Settings*/}
             {/*</Button>*/}
-            <Button color="inherit" onClick={onSignOut}>
+            <Button color="secondary" onClick={onSignOut}>
               Sign out
             </Button>
           </>
         ) : (
-          <Button color="inherit" component={Link} to="/login">
+          <Button color="secondary" component={Link} to="/login">
             Login
           </Button>
         )}

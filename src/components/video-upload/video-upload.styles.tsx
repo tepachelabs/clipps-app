@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import { styled } from "@mui/material";
 
 interface GetColorProps {
   isDragAccept: boolean;
@@ -19,7 +19,7 @@ const getColor = (props: GetColorProps) => {
   return "#ddd";
 };
 
-export const Dropzone = styled.div`
+export const Dropzone = styled("div")`
   align-items: center;
   border-color: ${(props: GetColorProps) => getColor(props)};
   border-style: dashed;

@@ -15,7 +15,7 @@ interface VideoUploadProps {
 
 export const VideoUpload: React.FC<VideoUploadProps> = ({ onUploaded }: VideoUploadProps) => {
   const [files, setFiles] = useState<File[]>([]);
-  const { open, getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } = useDropzone({
+  const { open, getRootProps, getInputProps } = useDropzone({
     accept: "video/mp4",
     onDrop: (acceptedFiles: File[]) => setFiles(acceptedFiles),
     noClick: true,
@@ -51,7 +51,7 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUploaded }: VideoUpl
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
-        <Dropzone {...getRootProps({ isFocused, isDragAccept, isDragReject })}>
+        <Dropzone {...getRootProps()}>
           <input {...getInputProps()} />
           {uploading ? (
             <>

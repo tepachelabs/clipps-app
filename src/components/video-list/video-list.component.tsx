@@ -11,6 +11,7 @@ import {
   Grid,
   Stack,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -39,8 +40,13 @@ const styles = {
   },
 };
 
+const getFiltered = (videos: Video[], searchQuery: string): Video[] => {
+  return videos.filter((video) => video.title.includes(searchQuery));
+};
+
 export const VideoList: React.FC<VideoListProps> = ({ videos }: VideoListProps) => {
   const [selection, setSelection] = useState<Video[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [confirmationOpen, setConfirmationOpen] = React.useState<boolean>(false);
   const token = useAppSelector(selectToken);
   const dispatch = useAppDispatch();
@@ -112,7 +118,12 @@ export const VideoList: React.FC<VideoListProps> = ({ videos }: VideoListProps) 
             </Stack>
           ) : (
             <Stack direction="row" spacing={2} justifyContent="space-between" p={1}>
-              <TextField label="Search" variant="outlined" size="small" disabled />
+              <TextField
+                label="Search..."
+                variant="outlined"
+                size="small"
+                onChange={({ target }) => setSearchQuery(target.value)}
+              />
               <Button startIcon={<DeleteIcon />} sx={{ alignSelf: "flex-end" }} disabled>
                 Trash
               </Button>
@@ -120,7 +131,7 @@ export const VideoList: React.FC<VideoListProps> = ({ videos }: VideoListProps) 
           )}
         </Card>
       </Grid>
-      {videos.map((video: Video) => (
+      {getFiltered(videos, searchQuery).map((video: Video) => (
         <Grid key={video.asset_id} item xs={3}>
           <Card variant="outlined">
             <Checkbox
@@ -136,9 +147,11 @@ export const VideoList: React.FC<VideoListProps> = ({ videos }: VideoListProps) 
                 alt={video.title}
               />
               <CardContent>
-                <Typography gutterBottom={false} noWrap>
-                  {video.title}
-                </Typography>
+                <Tooltip title={video.title}>
+                  <Typography gutterBottom={false} noWrap>
+                    {video.title}
+                  </Typography>
+                </Tooltip>
               </CardContent>
             </CardActionArea>
             <CardActions>

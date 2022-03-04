@@ -1,16 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Stack } from "@mui/material";
+import { Button, Stack, TextField, Typography } from "@mui/material";
 
 interface EditableLabel {
   isDisabled?: boolean;
   onCommit?: (editedValue: string) => void;
   value: string;
 }
-
-const styleSheet = {
-  h1: { display: "inline-block" },
-  button: { marginLeft: "8px" },
-};
 
 export const EditableLabel: React.FC<EditableLabel> = ({
   isDisabled,
@@ -25,7 +20,7 @@ export const EditableLabel: React.FC<EditableLabel> = ({
     setEditedValue(value);
   }, [value]);
 
-  if (isDisabled) return <h1>{value}</h1>;
+  if (isDisabled) return <Typography variant="h5">{value}</Typography>;
 
   const setEdit = () => {
     setIsEditing(true);
@@ -38,28 +33,32 @@ export const EditableLabel: React.FC<EditableLabel> = ({
     setEditedValue(value);
   };
 
-  if (isEditing) {
-    return (
-      <Stack direction="row" spacing={2} alignItems="center">
-        <input
-          ref={inputRef}
-          type="text"
-          value={editedValue}
-          disabled={isDisabled}
-          onChange={({ target }) => setEditedValue(target.value)}
-        />
-        <Button onClick={onSave}>Save</Button>
-        <Button onClick={() => setIsEditing(false)}>Cancel</Button>
-      </Stack>
-    );
-  }
-
   return (
-    <>
-      <h1 style={styleSheet.h1}>{value}</h1>
-      <button style={styleSheet.button} onClick={setEdit}>
-        edit
-      </button>
-    </>
+    <Stack direction="row" spacing={2} alignItems="center">
+      {isEditing ? (
+        <>
+          <TextField
+            label="Video's title"
+            variant="outlined"
+            value={editedValue}
+            disabled={isDisabled}
+            onChange={({ target }) => setEditedValue(target.value)}
+            size="small"
+            autoFocus
+          />
+          <Button variant="outlined" onClick={onSave}>
+            Save
+          </Button>
+          <Button variant="outlined" onClick={() => setIsEditing(false)}>
+            Cancel
+          </Button>
+        </>
+      ) : (
+        <>
+          <Typography variant="h5">{value}</Typography>
+          <Button onClick={setEdit}>Edit</Button>
+        </>
+      )}
+    </Stack>
   );
 };
