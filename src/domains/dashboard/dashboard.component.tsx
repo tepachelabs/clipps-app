@@ -1,14 +1,10 @@
 import React, { memo, useEffect } from "react";
-import styled from "styled-components";
+import { Grid } from "@mui/material";
 
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Video } from "../../models";
 import { VideoList, VideoUpload } from "../../components";
 import { fetchVideos, selectToken, selectVideos } from "../../reducers";
-
-const Box = styled.div`
-  margin: 2em 0;
-`;
 
 const DashboardComponent: React.FC = () => {
   const videos = useAppSelector<Video[]>(selectVideos);
@@ -25,16 +21,14 @@ const DashboardComponent: React.FC = () => {
   };
 
   return (
-    <div className="grid-container">
-      <div className="grid-x grid-margin-x">
-        <Box className="cell">
-          <VideoUpload onUploaded={onUploaded} />
-        </Box>
-        <Box className="cell">
-          <VideoList videos={videos} />
-        </Box>
-      </div>
-    </div>
+    <Grid container spacing={3} pt={4}>
+      <Grid item xs={12}>
+        <VideoUpload onUploaded={onUploaded} />
+      </Grid>
+      <Grid item xs={12}>
+        <VideoList videos={videos} />
+      </Grid>
+    </Grid>
   );
 };
 

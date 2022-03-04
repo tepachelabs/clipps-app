@@ -1,14 +1,31 @@
 import React, { memo, SyntheticEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  Box,
+  Button,
+  Container,
+  CssBaseline,
+  Grid,
+  Link,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 import { useAppDispatch } from "../../app/hooks";
 import { setToken } from "../../reducers";
 import { login } from "../../services";
-import styled from "styled-components";
+import { Copyright } from "../../components";
 
-const Container = styled.div`
-  padding-top: 5em;
-`;
+const styles = {
+  box: {
+    marginTop: 8,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  button: { mt: 3, mb: 2 },
+  copyright: { mt: 8, mb: 4 },
+};
 
 const LoginComponent: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -25,35 +42,49 @@ const LoginComponent: React.FC = () => {
   };
 
   return (
-    <Container className="grid-container">
-      <div className="grid-x grid-margin-x">
-        <div className="cell small-4 small-offset-4">
-          <h1>Login</h1>
-          <p>Enter your email/password, or create a new account.</p>
-          <form onSubmit={onSubmit}>
-            <label>
-              E-mail
-              <input
-                type="email"
-                value={email}
-                placeholder="alex@clipps.io"
-                onChange={({ target }) => setEmail(target.value)}
-                autoFocus
-              />
-            </label>
-            <label>
-              Password
-              <input
-                type="password"
-                value={password}
-                placeholder="ꞏꞏꞏꞏꞏꞏꞏꞏꞏꞏ"
-                onChange={({ target }) => setPassword(target.value)}
-              />
-            </label>
-            <input type="submit" className="button" value="Log in" />
-          </form>
-        </div>
-      </div>
+    <Container component="main" maxWidth="xs">
+      <Box sx={styles.box}>
+        <Typography component="h1" variant="h3">
+          Login
+        </Typography>
+      </Box>
+      <Box component="form" onSubmit={onSubmit} noValidate sx={{ mt: 1 }}>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="email"
+          label="Email Address"
+          name="email"
+          autoComplete="email"
+          autoFocus
+          value={email}
+          onChange={({ target }) => setEmail(target.value)}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="password"
+          label="Password"
+          type="password"
+          id="password"
+          autoComplete="current-password"
+          value={password}
+          onChange={({ target }) => setPassword(target.value)}
+        />
+        <Button type="submit" fullWidth variant="contained" sx={styles.button}>
+          Sign In
+        </Button>
+        <Grid container>
+          <Grid item>
+            <Link href="#" variant="body2">
+              {"Don't have an account? Sign Up"}
+            </Link>
+          </Grid>
+        </Grid>
+      </Box>
+      <Copyright sx={styles.copyright} />
     </Container>
   );
 };

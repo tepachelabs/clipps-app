@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { Box, Button, Chip, Grid, Typography } from "@mui/material";
 
 import { bytesToSize } from "../../app/utils";
 import { useAppSelector } from "../../app/hooks";
 import { create } from "../../services";
 import { selectToken } from "../../reducers";
-import { Box, Container, Dropzone, Subtitle, Title } from "./video-upload.styles";
-import { Button } from "../button";
-import { VideoPreviewCard } from "./video-preview-card.component";
+
+import { Dropzone } from "./video-upload.styles";
 
 interface VideoUploadProps {
   onUploaded?: () => void;
@@ -38,45 +38,51 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUploaded }: VideoUpl
   };
 
   const fileRows = files.map((file: File) => (
-    <VideoPreviewCard
-      key={file.name}
-      title={file.name}
-      size={bytesToSize(file.size)}
-      onDiscard={() => onDiscard(file)}
-      disabled={uploading}
-    />
+    <Box key={file.name} display="inline-block" mr={2} mb={2}>
+      <Chip
+        label={`${file.name} (${bytesToSize(file.size)})`}
+        variant="outlined"
+        onDelete={() => onDiscard(file)}
+        disabled={uploading}
+      />
+    </Box>
   ));
 
   return (
-    <Container>
-      <Dropzone {...getRootProps({ isFocused, isDragAccept, isDragReject })}>
-        <input {...getInputProps()} />
-        {uploading ? (
-          <>
-            <Title onClick={open}>Uploading your clips...</Title>
-            <Subtitle>Please wait a few mins</Subtitle>
-          </>
-        ) : (
-          <>
-            <Title onClick={open}>
-              Drop your clip(s), or <b>browse</b>
-            </Title>
-            <Subtitle>Supported: MP4. Max file size 100MB</Subtitle>
-          </>
-        )}
+    <Grid container spacing={3}>
+      <Grid item xs={12}>
+        <Dropzone {...getRootProps({ isFocused, isDragAccept, isDragReject })}>
+          <input {...getInputProps()} />
+          {uploading ? (
+            <>
+              <Typography variant="h5" color="text.secondary">
+                Uploading your clips...
+              </Typography>
+              <Typography color="text.secondary">Please wait a few mins</Typography>
+            </>
+          ) : (
+            <>
+              <Typography variant="h5" onClick={open} color="text.secondary">
+                Drop your clip(s), or <b>browse</b>
+              </Typography>
+              <Typography color="text.secondary">Supported: MP4. Max file size 100MB</Typography>
+            </>
+          )}
 
-        {!!fileRows.length && (
-          <Box className="grid-container">
-            <div className="grid-x grid-margin-x">{fileRows}</div>
-            <Button
-              className="float-right"
-              onClick={onUpload}
-              disabled={uploading}
-              label="Start upload"
-            />
-          </Box>
-        )}
-      </Dropzone>
-    </Container>
+          {!!fileRows.length && (
+            <Grid item container xs={12} pt={2}>
+              <Grid item xs={12}>
+                {fileRows}
+              </Grid>
+              <Grid item xs={12}>
+                <Button variant="outlined" onClick={onUpload} disabled={uploading}>
+                  Start upload
+                </Button>
+              </Grid>
+            </Grid>
+          )}
+        </Dropzone>
+      </Grid>
+    </Grid>
   );
 };

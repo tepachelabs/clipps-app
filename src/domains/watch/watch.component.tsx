@@ -6,25 +6,14 @@ import { getByAssetId, update } from "../../services";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { fetchVideos, selectIsAuthenticated, selectToken } from "../../reducers";
 import { EditableLabel } from "../../components";
-import styled from "styled-components";
+import { Card, CardActions, CardContent, CardMedia, Grid, Typography } from "@mui/material";
 
-const Container = styled.div`
-  padding-top: 1em;
-`;
-
-const Meta = styled.div`
-  display: flex;
-  justify-content: space-evenly;
-  border-bottom: 1px solid #eee;
-  width: 80%;
-  padding-bottom: 2em;
-`;
-
-const VideoPlayer = styled.video`
-  background: #333;
-  max-height: 600px;
-  width: 80%;
-`;
+const styles = {
+  video: {
+    backgroundColor: "#222",
+    maxHeight: 600,
+  },
+};
 
 const WatchComponent: React.FC = () => {
   const { assetId } = useParams<"assetId">();
@@ -55,26 +44,28 @@ const WatchComponent: React.FC = () => {
   const date = new Date(video.created_at);
 
   return (
-    <Container className="grid-container">
-      <div className="grid-x grid-margin-x">
-        <div className="cell text-center">
-          <div className="cell">
-            <VideoPlayer controls src={video.secure_url} />
-          </div>
-          <div className="cell">
+    <Grid container spacing={3} pt={4}>
+      <Grid item xs={12}>
+        <Card>
+          <CardMedia component="video" src={video.secure_url} controls sx={styles.video} />
+          <CardContent>
             <EditableLabel
               value={video.title}
               onCommit={onTitleUpdate}
               isDisabled={!isAuthenticated}
             />
-            <Meta className="float-center">
-              <span>Uploaded: {date.toDateString()}</span>
-              <span>Duration: {video.duration}s</span>
-            </Meta>
-          </div>
-        </div>
-      </div>
-    </Container>
+          </CardContent>
+          <CardActions>
+            <Typography variant="body2" color="text.secondary">
+              Uploaded: {date.toDateString()}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Duration: {video.duration}s
+            </Typography>
+          </CardActions>
+        </Card>
+      </Grid>
+    </Grid>
   );
 };
 

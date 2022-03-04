@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Button, Stack } from "@mui/material";
 
 interface EditableLabel {
   isDisabled?: boolean;
@@ -39,7 +40,7 @@ export const EditableLabel: React.FC<EditableLabel> = ({
 
   if (isEditing) {
     return (
-      <>
+      <Stack direction="row" spacing={2} alignItems="center">
         <input
           ref={inputRef}
           type="text"
@@ -47,13 +48,9 @@ export const EditableLabel: React.FC<EditableLabel> = ({
           disabled={isDisabled}
           onChange={({ target }) => setEditedValue(target.value)}
         />
-        <button style={styleSheet.button} onClick={onSave}>
-          Ok
-        </button>
-        <button style={styleSheet.button} onClick={() => setIsEditing(false)}>
-          No
-        </button>
-      </>
+        <Button onClick={onSave}>Save</Button>
+        <Button onClick={() => setIsEditing(false)}>Cancel</Button>
+      </Stack>
     );
   }
 

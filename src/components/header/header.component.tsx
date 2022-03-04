@@ -1,9 +1,13 @@
 import React, { SyntheticEvent, useCallback } from "react";
-import { Link as LinkTo } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { AppBar, Button, Toolbar, Typography } from "@mui/material";
 
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectIsAuthenticated, setToken, setVideos } from "../../reducers";
-import { Container, Link, NavAnchor, Ul } from "./header.styles";
+
+const styles = {
+  title: { flexGrow: 1 },
+};
 
 export const Header: React.FC = () => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
@@ -19,38 +23,29 @@ export const Header: React.FC = () => {
   );
 
   return (
-    <Container className="top-bar">
-      <div className="top-bar-left">
-        <LinkTo to="/">Clipps</LinkTo>
-      </div>
-      <div className="top-bar-right">
-        <Ul className="menu">
-          {isAuthenticated ? (
-            <>
-              <li>
-                <Link to="/">Home</Link>
-              </li>
-              {/*<li>*/}
-              {/*  <Link to="/settings">Settings</Link>*/}
-              {/*</li>*/}
-              <li>
-                <NavAnchor href="#" onClick={onSignOut}>
-                  Sign out
-                </NavAnchor>
-              </li>
-            </>
-          ) : (
-            <>
-              <li>
-                <Link to="/">Upload your clip now!</Link>
-              </li>
-              <li>
-                <Link to="/login">Log in</Link>
-              </li>
-            </>
-          )}
-        </Ul>
-      </div>
-    </Container>
+    <AppBar sx={{ boxShadow: "none" }}>
+      <Toolbar>
+        <Typography variant="h6" component="div" sx={styles.title}>
+          Clipps
+        </Typography>
+        {isAuthenticated ? (
+          <>
+            <Button color="inherit" component={Link} to="/">
+              Dashboard
+            </Button>
+            {/*<Button color="inherit" component={Link} to="/settings">*/}
+            {/*  Settings*/}
+            {/*</Button>*/}
+            <Button color="inherit" onClick={onSignOut}>
+              Sign out
+            </Button>
+          </>
+        ) : (
+          <Button color="inherit" component={Link} to="/login">
+            Login
+          </Button>
+        )}
+      </Toolbar>
+    </AppBar>
   );
 };

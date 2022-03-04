@@ -7,8 +7,8 @@ import { store } from "./app/store";
 import { App } from "./App";
 import * as serviceWorker from "./serviceWorker";
 
-import "foundation-sites/dist/css/foundation.min.css";
-import "./index.css";
+// import "foundation-sites/dist/css/foundation.min.css";
+// import "./index.css";
 
 ReactDOM.render(
   <React.StrictMode>

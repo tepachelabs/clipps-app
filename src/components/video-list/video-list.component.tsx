@@ -1,20 +1,26 @@
-import React, { useState } from "react";
-import { Video } from "../../models";
+import React, { useCallback, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { deleteByAssetId } from "../../services";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { fetchVideos, selectToken } from "../../reducers";
-import { Button } from "../button";
 import {
+  Button,
   Card,
+  CardActionArea,
   CardActions,
-  CardCheckbox,
   CardContent,
-  CardImage,
-  CardTitle,
-  SelectionActions,
-  SelectionLabel,
-} from "./video-list.styles";
+  CardMedia,
+  Checkbox,
+  Grid,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { Video } from "../../models";
+import { deleteByAssetId } from "../../services";
+import { fetchVideos, selectToken } from "../../reducers";
+
+import { DeleteConfirmation } from "./delete-confirmation.component";
 
 interface VideoListProps {
   videos: Video[];
@@ -22,79 +28,128 @@ interface VideoListProps {
 
 const getThumbUrl = (videoUrl: string) => videoUrl.replace(/\.(mp4|mov)$/, ".jpg");
 
+const styles = {
+  checkbox: {
+    position: "absolute",
+    zIndex: 99,
+    color: "white",
+    "&.Mui-checked": {
+      color: "white",
+    },
+  },
+};
+
 export const VideoList: React.FC<VideoListProps> = ({ videos }: VideoListProps) => {
   const [selection, setSelection] = useState<Video[]>([]);
+  const [confirmationOpen, setConfirmationOpen] = React.useState<boolean>(false);
   const token = useAppSelector(selectToken);
   const dispatch = useAppDispatch();
 
-  const onDelete = (video: Video) => {
-    if (window.confirm(`Do you really want to delete ${video.title}?`)) {
-      void deleteByAssetId(token, video.asset_id).then(() => {
-        void dispatch(fetchVideos(token));
-      });
-    }
-  };
+  const onSelect = useCallback(
+    (video: Video, checked: boolean) => {
+      if (checked) {
+        setSelection([...selection, video]);
+      } else {
+        const filtered = selection.filter((current) => current.asset_id !== video.asset_id);
+        setSelection(filtered);
+      }
+    },
+    [selection],
+  );
 
-  const onSelect = (video: Video, checked: boolean) => {
-    if (checked) {
-      setSelection([...selection, video]);
-    } else {
-      const filtered = selection.filter((current) => current.asset_id !== video.asset_id);
-      setSelection(filtered);
-    }
-  };
+  const onSelectAll = useCallback(() => setSelection(videos), [videos]);
 
-  const onSelectAll = () => setSelection(videos);
+  const onDelete = useCallback((video: Video) => {
+    setSelection([video]);
+    setConfirmationOpen(true);
+  }, []);
 
-  const onClearSelection = () => setSelection([]);
+  const onBulkDelete = useCallback(() => {
+    setConfirmationOpen(true);
+  }, []);
 
-  const onBulkDelete = async () => {
-    if (window.confirm(`Do you really want to delete the selected ${selection.length} videos?`)) {
-      await Promise.all(selection.map((video) => deleteByAssetId(token, video.asset_id)));
-      void dispatch(fetchVideos(token));
-      setSelection([]);
-    }
-  };
+  const onDeleteCancel = useCallback(() => {
+    setSelection([]);
+    setConfirmationOpen(false);
+  }, []);
+
+  const onDeleteAccept = useCallback(async () => {
+    await Promise.all(selection.map((video) => deleteByAssetId(token, video.asset_id)));
+    void dispatch(fetchVideos(token));
+    setSelection([]);
+    setConfirmationOpen(false);
+  }, [dispatch, selection, token]);
+
+  const onClearSelection = useCallback(() => setSelection([]), []);
+
+  const selectionLabel = useMemo(
+    () => (selection.length === 1 ? "Selected 1 item." : `Selected ${selection.length} items.`),
+    [selection.length],
+  );
 
   return (
-    <div className="grid-container">
-      <div className="grid-x grid-margin-x">
-        {!!selection.length && (
-          <Card className="cell callout">
-            <SelectionActions className="button-group">
-              <SelectionLabel>Selected {selection.length} item(s).</SelectionLabel>
-              <Button label="Select all" onClick={onSelectAll} />
-              <Button className="warning" label="Clear selection" onClick={onClearSelection} />
-              <Button className="alert" label="Delete videos" onClick={onBulkDelete} />
-            </SelectionActions>
-          </Card>
-        )}
-        {videos.map((video: Video) => (
-          <Card key={video.title} className="cell medium-4 large-3">
-            <CardCheckbox
-              type="checkbox"
+    <Grid container spacing={3}>
+      <DeleteConfirmation
+        isOpen={confirmationOpen}
+        items={selection}
+        onAccept={onDeleteAccept}
+        onCancel={onDeleteCancel}
+      />
+      <Grid item xs={12}>
+        <Card variant="outlined">
+          {selection.length ? (
+            <Stack direction="row" spacing={2} alignItems="center" p={1} pl={2} height={56}>
+              <Typography gutterBottom={false}>{selectionLabel}</Typography>
+              <Button variant="outlined" onClick={onSelectAll}>
+                Select all
+              </Button>
+              <Button variant="outlined" onClick={onClearSelection}>
+                Clear selection
+              </Button>
+              <Button variant="outlined" onClick={onBulkDelete}>
+                Delete selected
+              </Button>
+            </Stack>
+          ) : (
+            <Stack direction="row" spacing={2} justifyContent="space-between" p={1}>
+              <TextField label="Search" variant="outlined" size="small" disabled />
+              <Button startIcon={<DeleteIcon />} sx={{ alignSelf: "flex-end" }} disabled>
+                Trash
+              </Button>
+            </Stack>
+          )}
+        </Card>
+      </Grid>
+      {videos.map((video: Video) => (
+        <Grid key={video.asset_id} item xs={3}>
+          <Card variant="outlined">
+            <Checkbox
               checked={!!selection.find((current) => current.asset_id === video.asset_id)}
               onChange={({ target }) => onSelect(video, target.checked)}
+              sx={styles.checkbox}
             />
-            <Link to={`/w/${video.asset_id}`}>
-              <CardImage
-                className="card-img"
-                src={getThumbUrl(video.secure_url)}
+            <CardActionArea component={Link} to={`/w/${video.asset_id}`}>
+              <CardMedia
+                component="img"
+                width="100%"
+                image={getThumbUrl(video.secure_url)}
                 alt={video.title}
               />
-            </Link>
-            <CardContent>
-              <Link to={`/w/${video.asset_id}`}>
-                <CardTitle>{video.title}</CardTitle>
-              </Link>
-              <CardActions className="button-group">
-                <Button label="Copy Link" />
-                <Button className="alert" label="Delete" onClick={() => onDelete(video)} />
-              </CardActions>
-            </CardContent>
+              <CardContent>
+                <Typography gutterBottom={false} noWrap>
+                  {video.title}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+            <CardActions>
+              <Button size="small">Share</Button>
+              <Button size="small" onClick={() => onDelete(video)}>
+                Delete
+              </Button>
+            </CardActions>
           </Card>
-        ))}
-      </div>
-    </div>
+        </Grid>
+      ))}
+    </Grid>
   );
 };
