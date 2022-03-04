@@ -1,15 +1,6 @@
 import React, { memo, SyntheticEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Box,
-  Button,
-  Container,
-  CssBaseline,
-  Grid,
-  Link,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Container, Grid, Link, TextField, Typography } from "@mui/material";
 
 import { useAppDispatch } from "../../app/hooks";
 import { setToken } from "../../reducers";
