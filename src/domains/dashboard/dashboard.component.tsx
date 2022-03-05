@@ -14,7 +14,8 @@ const DashboardComponent: React.FC = () => {
   useEffect(() => {
     if (videos.length) return;
     void dispatch(fetchVideos(token));
-  }, [dispatch, token, videos]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onUploaded = () => {
     void dispatch(fetchVideos(token));

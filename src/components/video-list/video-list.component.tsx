@@ -27,8 +27,6 @@ interface VideoListProps {
   videos: Video[];
 }
 
-const getThumbUrl = (videoUrl: string) => videoUrl.replace(/\.(mp4|mov)$/, ".jpg");
-
 const styles = {
   checkbox: {
     position: "absolute",
@@ -140,12 +138,7 @@ export const VideoList: React.FC<VideoListProps> = ({ videos }: VideoListProps) 
               sx={styles.checkbox}
             />
             <CardActionArea component={Link} to={`/w/${video.asset_id}`}>
-              <CardMedia
-                component="img"
-                width="100%"
-                image={getThumbUrl(video.secure_url)}
-                alt={video.title}
-              />
+              <CardMedia component="img" width="100%" image={video.poster_url} alt={video.title} />
               <CardContent>
                 <Tooltip title={video.title}>
                   <Typography gutterBottom={false} noWrap>

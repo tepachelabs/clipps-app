@@ -68,7 +68,13 @@ const WatchComponent: React.FC = () => {
       )}
       <Grid item xs={12}>
         <Card variant="outlined">
-          <CardMedia component="video" src={video.secure_url} controls sx={styles.video} />
+          <CardMedia
+            component="video"
+            src={video.secure_url}
+            controls
+            sx={styles.video}
+            controlsList="nodownload"
+          />
           <CardContent>
             <Stack direction="row" spacing={2} justifyContent="space-between">
               <EditableLabel
