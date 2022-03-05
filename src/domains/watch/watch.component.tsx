@@ -82,7 +82,10 @@ const WatchComponent: React.FC = () => {
                 onCommit={onTitleUpdate}
                 isDisabled={!isAuthenticated}
               />
-              <ClickToCopyButton label="Share" value={`https://clipps.io/w/${video.asset_id}`} />
+              <ClickToCopyButton
+                label="Share"
+                value={`https://clipps.netlify.app/w/${video.asset_id}`}
+              />
             </Stack>
             <Stack direction="row" spacing={2}>
               <Typography variant="body2" color="text.secondary">
