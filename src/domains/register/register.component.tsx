@@ -12,7 +12,7 @@ import {
 
 import { useAppDispatch } from "../../app/hooks";
 import { setToken } from "../../reducers";
-import { login, register } from "../../services";
+import { register } from "../../services";
 import { Copyright } from "../../components";
 
 const styles = {
