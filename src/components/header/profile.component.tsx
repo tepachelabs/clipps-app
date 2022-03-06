@@ -18,6 +18,8 @@ export const ProfileCard: React.FC = () => {
 
   if (!profile) return null;
 
+  const quotaInMb = Math.floor((profile?.bytesUsed || 1) / 1000000);
+
   return (
     <Stack direction="row" spacing={2} alignItems="center">
       <Box>
@@ -25,7 +27,7 @@ export const ProfileCard: React.FC = () => {
           {profile?.username}
         </Typography>
         <Typography color="text.secondary" textAlign="right">
-          {profile?.bytesUsed || 0}/1000 MB used
+          {quotaInMb}/1000 MB used
         </Typography>
       </Box>
       <Avatar alt={profile?.username} src={profile?.avatar}>

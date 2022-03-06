@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { Box, Button, Chip, Grid, Typography } from "@mui/material";
+import { Alert, Box, Button, Chip, Grid, Typography } from "@mui/material";
 
 import { bytesToSize } from "../../../app/utils";
 import { useAppSelector } from "../../../app/hooks";
@@ -15,6 +15,7 @@ interface VideoUploadProps {
 
 export const VideoUpload: React.FC<VideoUploadProps> = ({ onUploaded }: VideoUploadProps) => {
   const [files, setFiles] = useState<File[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const { open, getRootProps, getInputProps } = useDropzone({
     accept: "video/mp4",
     onDrop: (acceptedFiles: File[]) => setFiles(acceptedFiles),
@@ -26,7 +27,14 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUploaded }: VideoUpl
 
   const onUpload = async () => {
     setUploading(true);
-    await Promise.all(files.map((file) => create(token, file)));
+    try {
+      await Promise.all(files.map((file) => create(token, file)));
+    } catch (e) {
+      const { message } = e as { message: string };
+      setError(message);
+      setUploading(false);
+      return;
+    }
     onUploaded?.();
     setFiles([]);
     setUploading(false);
@@ -69,13 +77,15 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUploaded }: VideoUpl
             </>
           )}
 
+          {error && <Alert severity="error">Upgrade to get more space now!</Alert>}
+
           {!!fileRows.length && (
             <Grid item container xs={12} pt={2}>
               <Grid item xs={12}>
                 {fileRows}
               </Grid>
               <Grid item xs={12}>
-                <Button variant="outlined" onClick={onUpload} disabled={uploading}>
+                <Button variant="outlined" onClick={onUpload} disabled={uploading || !!error}>
                   Start upload
                 </Button>
               </Grid>
