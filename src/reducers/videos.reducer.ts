@@ -12,8 +12,7 @@ const initialState: VideosState = {
 };
 
 export const fetchVideos = createAsyncThunk("videos/fetchVideos", async (token: string) => {
-  const { data } = await getAll(token);
-  return data;
+  return await getAll(token);
 });
 
 export const videosSlice = createSlice({
@@ -38,7 +37,7 @@ export const selectVideoByAssetId = (assetId: string): ((state: RootState) => Vi
   createSelector(
     (state: RootState) => state.videos.videos,
     (videos: Video[]) => {
-      return videos.find((video) => video.asset_id === assetId);
+      return videos.find((video) => video.assetId === assetId);
     },
   );
 

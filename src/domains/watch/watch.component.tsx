@@ -36,8 +36,8 @@ const WatchComponent: React.FC = () => {
   useEffect(() => {
     async function fetchVideo() {
       if (!assetId) return;
-      const { data } = await getByAssetId(assetId);
-      setVideo(data);
+      const video = await getByAssetId(assetId);
+      setVideo(video);
     }
     void fetchVideo();
   }, [assetId]);
@@ -52,7 +52,7 @@ const WatchComponent: React.FC = () => {
     void dispatch(fetchVideos(token));
   };
 
-  const date = new Date(video.created_at);
+  const date = new Date(video.createdAt);
 
   return (
     <Grid container spacing={3} pt={4}>
@@ -70,7 +70,7 @@ const WatchComponent: React.FC = () => {
         <Card variant="outlined">
           <CardMedia
             component="video"
-            src={video.secure_url}
+            src={video.secureUrl}
             controls
             sx={styles.video}
             controlsList="nodownload"
@@ -84,7 +84,7 @@ const WatchComponent: React.FC = () => {
               />
               <ClickToCopyButton
                 label="Share"
-                value={`https://clipps.netlify.app/w/${video.asset_id}`}
+                value={`https://clipps.netlify.app/w/${video.assetId}`}
               />
             </Stack>
             <Stack direction="row" spacing={2}>

@@ -1,4 +1,4 @@
-import { http } from "./http.service";
+import { api } from "./http.service";
 
 interface LoginParams {
   email: string;
@@ -9,4 +9,4 @@ interface LoginResponse {
   token: string;
 }
 
-export const login = (data: LoginParams) => http.post<LoginResponse>("/login", data);
+export const login = (data: LoginParams) => api.post<LoginResponse>("/login", data);

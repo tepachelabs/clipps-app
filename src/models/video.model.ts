@@ -1,10 +1,10 @@
 export type Video = {
-  asset_id: string;
+  assetId: string;
   title: string;
-  secure_url: string;
-  poster_url: string;
+  secureUrl: string;
+  posterUrl: string;
   duration: number;
   bytes: number;
-  created_at: string;
-  deleted_at: string;
+  createdAt: string;
+  deletedAt: string;
 };

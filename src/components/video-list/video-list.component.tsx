@@ -38,9 +38,8 @@ const styles = {
   },
 };
 
-const getFiltered = (videos: Video[], searchQuery: string): Video[] => {
-  return videos.filter((video) => video.title.includes(searchQuery));
-};
+const getFiltered = (videos: Video[], searchQuery: string): Video[] =>
+  videos.filter((video) => video.title.includes(searchQuery));
 
 export const VideoList: React.FC<VideoListProps> = ({ videos }: VideoListProps) => {
   const [selection, setSelection] = useState<Video[]>([]);
@@ -54,7 +53,7 @@ export const VideoList: React.FC<VideoListProps> = ({ videos }: VideoListProps) 
       if (checked) {
         setSelection([...selection, video]);
       } else {
-        const filtered = selection.filter((current) => current.asset_id !== video.asset_id);
+        const filtered = selection.filter((current) => current.assetId !== video.assetId);
         setSelection(filtered);
       }
     },
@@ -78,7 +77,7 @@ export const VideoList: React.FC<VideoListProps> = ({ videos }: VideoListProps) 
   }, []);
 
   const onDeleteAccept = useCallback(async () => {
-    await Promise.all(selection.map((video) => deleteByAssetId(token, video.asset_id)));
+    await Promise.all(selection.map((video) => deleteByAssetId(token, video.assetId)));
     void dispatch(fetchVideos(token));
     setSelection([]);
     setConfirmationOpen(false);
@@ -130,15 +129,15 @@ export const VideoList: React.FC<VideoListProps> = ({ videos }: VideoListProps) 
         </Card>
       </Grid>
       {getFiltered(videos, searchQuery).map((video: Video) => (
-        <Grid key={video.asset_id} item xs={3}>
+        <Grid key={video.assetId} item xs={3}>
           <Card variant="outlined">
             <Checkbox
-              checked={!!selection.find((current) => current.asset_id === video.asset_id)}
+              checked={!!selection.find((current) => current.assetId === video.assetId)}
               onChange={({ target }) => onSelect(video, target.checked)}
               sx={styles.checkbox}
             />
-            <CardActionArea component={Link} to={`/w/${video.asset_id}`}>
-              <CardMedia component="img" width="100%" image={video.poster_url} alt={video.title} />
+            <CardActionArea component={Link} to={`/w/${video.assetId}`}>
+              <CardMedia component="img" width="100%" image={video.posterUrl} alt={video.title} />
               <CardContent>
                 <Tooltip title={video.title}>
                   <Typography gutterBottom={false} noWrap>
