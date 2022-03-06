@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import { AppBar, Box, Button, Toolbar } from "@mui/material";
 
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { selectIsAuthenticated, setToken, setVideos } from "../../reducers";
+import { selectIsAuthenticated, setProfile, setToken, setVideos } from "../../reducers";
+
+import { ProfileCard } from "./profile.component";
 
 const styles = {
   appBar: {
@@ -22,6 +24,7 @@ export const Header: React.FC = () => {
       e.preventDefault();
       dispatch(setToken(""));
       dispatch(setVideos([]));
+      dispatch(setProfile({}));
     },
     [dispatch],
   );
@@ -36,6 +39,9 @@ export const Header: React.FC = () => {
         </Box>
         {isAuthenticated ? (
           <>
+            <Box mr={2}>
+              <ProfileCard />
+            </Box>
             <Button color="secondary" component={Link} to="/">
               Dashboard
             </Button>
