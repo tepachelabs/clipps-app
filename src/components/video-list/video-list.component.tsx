@@ -39,7 +39,7 @@ const styles = {
 };
 
 const getFiltered = (videos: Video[], searchQuery: string): Video[] =>
-  videos.filter((video) => video.title.includes(searchQuery));
+  videos.filter((video) => video.title.toLowerCase().includes(searchQuery.toLowerCase()));
 
 export const VideoList: React.FC<VideoListProps> = ({ videos }: VideoListProps) => {
   const [selection, setSelection] = useState<Video[]>([]);

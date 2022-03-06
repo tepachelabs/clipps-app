@@ -47,8 +47,8 @@ const WatchComponent: React.FC = () => {
   const onTitleUpdate = async (editedValue: string) => {
     if (!isAuthenticated || !assetId) return;
 
-    const { data } = await update(token, assetId, editedValue);
-    setVideo(data);
+    const updatedVideo = await update(token, assetId, editedValue);
+    setVideo(updatedVideo);
     void dispatch(fetchVideos(token));
   };
 

@@ -26,9 +26,9 @@ const castDataToVideo = (data: ApiVideo): Video => {
   } as Video;
 };
 
-export const parseVideoEntity = (arg: unknown): Video => castDataToVideo(arg as ApiVideo);
+const parseVideoEntity = (arg: unknown): Video => castDataToVideo(arg as ApiVideo);
 
-export const parseVideoEntities = (arg: unknown[]): Video[] =>
+const parseVideoEntities = (arg: unknown[]): Video[] =>
   arg.map((chunk: unknown) => castDataToVideo(chunk as ApiVideo));
 
 export const getAll = async (token: string): Promise<Video[]> => {
@@ -40,8 +40,8 @@ export const getAll = async (token: string): Promise<Video[]> => {
   return parseVideoEntities(data);
 };
 
-export const update = (token: string, assetId: string, title: string) => {
-  return api.patch<Video>(
+export const update = async (token: string, assetId: string, title: string): Promise<Video> => {
+  const { data } = await api.patch<ApiVideo>(
     `/videos/${assetId}`,
     { title },
     {
@@ -50,6 +50,7 @@ export const update = (token: string, assetId: string, title: string) => {
       },
     },
   );
+  return parseVideoEntity(data);
 };
 
 export const getByAssetId = async (assetId: string): Promise<Video> => {
