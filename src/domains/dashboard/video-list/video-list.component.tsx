@@ -16,10 +16,10 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { Video } from "../../models";
-import { deleteByAssetId } from "../../services";
-import { fetchVideos, selectToken } from "../../reducers";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { Video } from "../../../models";
+import { deleteByAssetId } from "../../../services";
+import { fetchVideos, selectToken } from "../../../reducers";
 
 import { DeleteConfirmation } from "./delete-confirmation.component";
 
@@ -72,15 +72,15 @@ export const VideoList: React.FC<VideoListProps> = ({ videos }: VideoListProps) 
   }, []);
 
   const onDeleteCancel = useCallback(() => {
-    setSelection([]);
     setConfirmationOpen(false);
+    setSelection([]);
   }, []);
 
   const onDeleteAccept = useCallback(async () => {
     await Promise.all(selection.map((video) => deleteByAssetId(token, video.assetId)));
     void dispatch(fetchVideos(token));
-    setSelection([]);
     setConfirmationOpen(false);
+    setSelection([]);
   }, [dispatch, selection, token]);
 
   const onClearSelection = useCallback(() => setSelection([]), []);

@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { Box, Container, CssBaseline } from "@mui/material";
 
 import { Header, RequireAuth } from "./components";
-import { Dashboard, Login, Settings, Watch } from "./domains";
+import { Dashboard, Login, Register, Settings, Watch } from "./domains";
 
 const styles = {
   container: {
@@ -20,6 +20,7 @@ export const App = () => {
       <Box pt={8}>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/w/:assetId" element={<Watch />} />
           <Route
             path="/"

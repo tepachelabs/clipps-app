@@ -3,8 +3,10 @@ import { Grid } from "@mui/material";
 
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Video } from "../../models";
-import { VideoList, VideoUpload } from "../../components";
 import { fetchVideos, selectToken, selectVideos } from "../../reducers";
+
+import { VideoUpload } from "./video-upload";
+import { VideoList } from "./video-list";
 
 const DashboardComponent: React.FC = () => {
   const videos = useAppSelector<Video[]>(selectVideos);

@@ -12,7 +12,7 @@ import {
 
 import { useAppDispatch } from "../../app/hooks";
 import { setToken } from "../../reducers";
-import { login } from "../../services";
+import { login, register } from "../../services";
 import { Copyright } from "../../components";
 
 const styles = {
@@ -26,15 +26,19 @@ const styles = {
   copyright: { mt: 8, mb: 4 },
 };
 
-const LoginComponent: React.FC = () => {
+const RegisterComponent: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    void login({ email, password }).then(({ data }) => {
+
+    if (password !== confirmPassword) return;
+
+    void register({ email, password, confirmPassword }).then(({ data }) => {
       dispatch(setToken(data.token));
       navigate("/", { replace: true });
     });
@@ -44,7 +48,7 @@ const LoginComponent: React.FC = () => {
     <Container component="main" maxWidth="xs">
       <Box sx={styles.box}>
         <Typography component="h1" variant="h3">
-          Login
+          Register
         </Typography>
       </Box>
       <Box component="form" onSubmit={onSubmit} noValidate sx={{ mt: 1 }}>
@@ -53,7 +57,7 @@ const LoginComponent: React.FC = () => {
           required
           fullWidth
           id="email"
-          label="Email Address"
+          label="Email address"
           name="email"
           autoComplete="email"
           autoFocus
@@ -72,13 +76,24 @@ const LoginComponent: React.FC = () => {
           value={password}
           onChange={({ target }) => setPassword(target.value)}
         />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="confirmPassword"
+          label="Confirm password"
+          type="password"
+          id="confirmPassword"
+          value={confirmPassword}
+          onChange={({ target }) => setConfirmPassword(target.value)}
+        />
         <Button type="submit" fullWidth variant="contained" sx={styles.button}>
-          Sign In
+          Sign Up
         </Button>
         <Grid container>
           <Grid item>
-            <MuiLink component={Link} to="/register" variant="body2">
-              {"Don't have an account? Sign Up"}
+            <MuiLink component={Link} to="/login" variant="body2">
+              Return to login
             </MuiLink>
           </Grid>
         </Grid>
@@ -88,4 +103,4 @@ const LoginComponent: React.FC = () => {
   );
 };
 
-export const Login = memo(LoginComponent);
+export const Register = memo(RegisterComponent);

@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Box, Button, Chip, Grid, Typography } from "@mui/material";
 
-import { bytesToSize } from "../../app/utils";
-import { useAppSelector } from "../../app/hooks";
-import { create } from "../../services";
-import { selectToken } from "../../reducers";
+import { bytesToSize } from "../../../app/utils";
+import { useAppSelector } from "../../../app/hooks";
+import { create } from "../../../services";
+import { selectToken } from "../../../reducers";
 
 import { Dropzone } from "./video-upload.styles";
 

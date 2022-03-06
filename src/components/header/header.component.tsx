@@ -47,9 +47,14 @@ export const Header: React.FC = () => {
             </Button>
           </>
         ) : (
-          <Button color="secondary" component={Link} to="/login">
-            Login
-          </Button>
+          <>
+            <Button color="secondary" component={Link} to="/login">
+              Login
+            </Button>
+            <Button color="secondary" component={Link} to="/register">
+              Register
+            </Button>
+          </>
         )}
       </Toolbar>
     </AppBar>
