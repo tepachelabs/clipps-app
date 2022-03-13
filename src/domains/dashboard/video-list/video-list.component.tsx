@@ -1,55 +1,36 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import {
-  Button,
-  Card,
-  CardActionArea,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Checkbox,
-  Grid,
-  Stack,
-  TextField,
-  Tooltip,
-  Typography,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { Button, Card, Grid, Stack, TextField, Typography } from "@mui/material";
 
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { Video } from "../../../models";
-import { deleteByAssetId } from "../../../services";
-import { fetchVideos, selectToken } from "../../../reducers";
 
 import { DeleteConfirmation } from "./delete-confirmation.component";
+import { Box } from "@mui/material";
+import { VideoCardProps } from "../video-card";
 
 interface VideoListProps {
+  additionalControls?: JSX.Element;
+  children?: JSX.Element;
+  ItemRenderer: (props: VideoCardProps) => JSX.Element;
+  onDeleteItems?: (videos: Video[], callback?: () => void) => Promise<void>;
   videos: Video[];
 }
-
-const styles = {
-  checkbox: {
-    position: "absolute",
-    zIndex: 99,
-    color: "white",
-    "&.Mui-checked": {
-      color: "white",
-    },
-  },
-};
 
 const getFiltered = (videos: Video[], searchQuery: string): Video[] =>
   videos.filter((video) => video.title.toLowerCase().includes(searchQuery.toLowerCase()));
 
-export const VideoList: React.FC<VideoListProps> = ({ videos }: VideoListProps) => {
+export const VideoList: React.FC<VideoListProps> = ({
+  additionalControls,
+  children,
+  ItemRenderer,
+  onDeleteItems,
+  videos,
+}: VideoListProps) => {
   const [selection, setSelection] = useState<Video[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [confirmationOpen, setConfirmationOpen] = React.useState<boolean>(false);
-  const token = useAppSelector(selectToken);
-  const dispatch = useAppDispatch();
 
   const onSelect = useCallback(
-    (video: Video, checked: boolean) => {
+    ({ video, checked }: { video: Video; checked: boolean }) => {
       if (checked) {
         setSelection([...selection, video]);
       } else {
@@ -77,11 +58,10 @@ export const VideoList: React.FC<VideoListProps> = ({ videos }: VideoListProps) 
   }, []);
 
   const onDeleteAccept = useCallback(async () => {
-    await Promise.all(selection.map((video) => deleteByAssetId(token, video.assetId)));
-    void dispatch(fetchVideos(token));
+    await onDeleteItems?.(selection);
     setConfirmationOpen(false);
     setSelection([]);
-  }, [dispatch, selection, token]);
+  }, [onDeleteItems, selection]);
 
   const onClearSelection = useCallback(() => setSelection([]), []);
 
@@ -121,39 +101,22 @@ export const VideoList: React.FC<VideoListProps> = ({ videos }: VideoListProps) 
                 size="small"
                 onChange={({ target }) => setSearchQuery(target.value)}
               />
-              <Button startIcon={<DeleteIcon />} sx={{ alignSelf: "flex-end" }} disabled>
-                Trash
-              </Button>
+              <Box sx={{ alignSelf: "flex-end" }}>{additionalControls}</Box>
             </Stack>
           )}
         </Card>
       </Grid>
+      <Grid item xs={12}>
+        {children}
+      </Grid>
       {getFiltered(videos, searchQuery).map((video: Video) => (
-        <Grid key={video.assetId} item xs={3}>
-          <Card variant="outlined">
-            <Checkbox
-              checked={!!selection.find((current) => current.assetId === video.assetId)}
-              onChange={({ target }) => onSelect(video, target.checked)}
-              sx={styles.checkbox}
-            />
-            <CardActionArea component={Link} to={`/w/${video.assetId}`}>
-              <CardMedia component="img" width="100%" image={video.posterUrl} alt={video.title} />
-              <CardContent>
-                <Tooltip title={video.title}>
-                  <Typography gutterBottom={false} noWrap>
-                    {video.title}
-                  </Typography>
-                </Tooltip>
-              </CardContent>
-            </CardActionArea>
-            <CardActions>
-              <Button size="small">Share</Button>
-              <Button size="small" onClick={() => onDelete(video)}>
-                Delete
-              </Button>
-            </CardActions>
-          </Card>
-        </Grid>
+        <ItemRenderer
+          key={video.assetId}
+          video={video}
+          isChecked={!!selection.find((current) => current.assetId === video.assetId)}
+          onCheck={onSelect}
+          onDelete={() => onDelete(video)}
+        />
       ))}
     </Grid>
   );

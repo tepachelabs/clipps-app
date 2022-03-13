@@ -13,3 +13,9 @@ declare module "@mui/material/styles" {
     };
   }
 }
+
+declare module "@mui/material/Paper" {
+  interface PaperPropsVariantOverrides {
+    muted: true;
+  }
+}

@@ -32,7 +32,7 @@ const parseVideoEntities = (arg: unknown[]): Video[] =>
   arg.map((chunk: unknown) => castDataToVideo(chunk as ApiVideo));
 
 export const getAll = async (token: string): Promise<Video[]> => {
-  const { data } = await api.get<ApiVideo[]>("/videos", {
+  const { data } = await api.get<ApiVideo[]>("/videos?deleted=true", {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -40,10 +40,15 @@ export const getAll = async (token: string): Promise<Video[]> => {
   return parseVideoEntities(data);
 };
 
-export const update = async (token: string, assetId: string, title: string): Promise<Video> => {
+export const update = async (
+  token: string,
+  assetId: string,
+  title: string,
+  deletedAt?: Date | null,
+): Promise<Video> => {
   const { data } = await api.patch<ApiVideo>(
     `/videos/${assetId}`,
-    { title },
+    { title, deletedAt },
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -73,6 +78,14 @@ export const create = (token: string, selectedFile: Blob, config?: Partial<Axios
 
 export const deleteByAssetId = (token: string, assetId: string) => {
   return api.delete<unknown>(`/videos/${assetId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const permanentlyDeleteByAssetId = (token: string, assetId: string) => {
+  return api.delete<unknown>(`/videos/${assetId}?permanent=true`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

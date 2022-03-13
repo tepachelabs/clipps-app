@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const dev = {
   apiGatewayUrl: "http://localhost:3333/v1",
 };

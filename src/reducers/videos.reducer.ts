@@ -5,10 +5,12 @@ import { getAll } from "../services";
 
 interface VideosState {
   videos: Video[];
+  deletedVideos: Video[];
 }
 
 const initialState: VideosState = {
   videos: [],
+  deletedVideos: [],
 };
 
 export const fetchVideos = createAsyncThunk("videos/fetchVideos", async (token: string) => {
@@ -25,7 +27,19 @@ export const videosSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchVideos.fulfilled, (state, action) => {
-      state.videos = action.payload;
+      const videos: Video[] = [];
+      const deletedVideos: Video[] = [];
+
+      action.payload.forEach((video) => {
+        if (video.deletedAt) {
+          deletedVideos.push(video);
+        } else {
+          videos.push(video);
+        }
+      });
+
+      state.videos = videos;
+      state.deletedVideos = deletedVideos;
     });
   },
 });
@@ -33,6 +47,7 @@ export const videosSlice = createSlice({
 export const { setVideos } = videosSlice.actions;
 
 export const selectVideos = (state: RootState) => state.videos.videos;
+export const selectDeletedVideos = (state: RootState) => state.videos.deletedVideos;
 export const selectVideoByAssetId = (assetId: string): ((state: RootState) => Video | undefined) =>
   createSelector(
     (state: RootState) => state.videos.videos,
