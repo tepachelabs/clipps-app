@@ -5,11 +5,13 @@ import { Button } from "@mui/material";
 interface ClickToCopyButtonProps {
   label: string;
   value: string;
+  variant?: "contained" | "outlined" | "text";
 }
 
 export const ClickToCopyButton: React.FC<ClickToCopyButtonProps> = ({
   label,
   value,
+  variant,
 }: ClickToCopyButtonProps) => {
   const timerRef = useRef(null);
   const [btnLabel, setBtnLabel] = useState<string>(label);
@@ -30,7 +32,7 @@ export const ClickToCopyButton: React.FC<ClickToCopyButtonProps> = ({
   }, []);
 
   return (
-    <Button variant="outlined" onClick={onShareClick}>
+    <Button variant={variant} onClick={onShareClick}>
       {btnLabel}
     </Button>
   );

@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 
 import { Video } from "../../../models";
+import { ClickToCopyButton } from "../../../components";
 
 export interface VideoCardProps {
   isChecked: boolean;
@@ -59,9 +60,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" onClick={() => onShare?.(video)}>
-          Share
-        </Button>
+        <ClickToCopyButton label="Share" value={`https://clipps.netlify.app/w/${video.assetId}`} />
         <Button size="small" onClick={() => onDelete?.(video)}>
           Delete
         </Button>

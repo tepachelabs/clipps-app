@@ -58,9 +58,9 @@ export const update = async (
   return parseVideoEntity(data);
 };
 
-export const getByAssetId = async (assetId: string): Promise<Video> => {
+export const getByAssetId = async (assetId: string): Promise<Video | null> => {
   const { data } = await api.get<ApiVideo>(`/video/${assetId}`);
-  return parseVideoEntity(data);
+  return data ? parseVideoEntity(data) : null;
 };
 
 export const create = (token: string, selectedFile: Blob, config?: Partial<AxiosRequestConfig>) => {

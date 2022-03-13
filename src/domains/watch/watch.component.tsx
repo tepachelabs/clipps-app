@@ -1,33 +1,20 @@
 import React, { memo, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { formatDistance } from "date-fns";
+import { Breadcrumbs, Grid, IconButton, Link as MuiLink, Typography } from "@mui/material";
+import ArrowBack from "@mui/icons-material/ArrowBack";
 
 import { Video } from "../../models";
 import { getByAssetId, update } from "../../services";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { fetchVideos, selectIsAuthenticated, selectToken } from "../../reducers";
-import { ClickToCopyButton, EditableLabel } from "../../components";
-import {
-  Breadcrumbs,
-  Card,
-  CardContent,
-  CardMedia,
-  Grid,
-  Link as MuiLink,
-  Stack,
-  Typography,
-} from "@mui/material";
-import { NotFound } from "../not-found";
 
-const styles = {
-  video: {
-    backgroundColor: "#222",
-    maxHeight: 600,
-  },
-};
+import { PlayerLoading } from "./loading.component";
+import { Player } from "./player.component";
+import { NotFound } from "./not-found.component";
 
 const WatchComponent: React.FC = () => {
   const { assetId } = useParams<"assetId">();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [video, setVideo] = useState<Video>();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const token = useAppSelector(selectToken);
@@ -37,12 +24,11 @@ const WatchComponent: React.FC = () => {
     async function fetchVideo() {
       if (!assetId) return;
       const video = await getByAssetId(assetId);
-      setVideo(video);
+      if (video) setVideo(video);
+      setIsLoading(false);
     }
     void fetchVideo();
   }, [assetId]);
-
-  if (!video) return <NotFound />;
 
   const onTitleUpdate = async (editedValue: string) => {
     if (!isAuthenticated || !assetId) return;
@@ -52,48 +38,29 @@ const WatchComponent: React.FC = () => {
     void dispatch(fetchVideos(token));
   };
 
-  const date = new Date(video.createdAt);
-
   return (
     <Grid container spacing={3} pt={4}>
       {isAuthenticated && (
         <Grid item xs={12}>
           <Breadcrumbs aria-label="breadcrumb">
+            <IconButton component={Link} to="/">
+              <ArrowBack />
+            </IconButton>
             <MuiLink color="inherit" component={Link} to="/">
               Dashboard
             </MuiLink>
-            <Typography color="text.primary">{video.title}</Typography>
+            <Typography color="text.primary">{video?.title || "The void 😱"}</Typography>
           </Breadcrumbs>
         </Grid>
       )}
       <Grid item xs={12}>
-        <Card variant="outlined">
-          <CardMedia
-            component="video"
-            src={video.secureUrl}
-            controls
-            sx={styles.video}
-            controlsList="nodownload"
-          />
-          <CardContent>
-            <Stack direction="row" spacing={2} justifyContent="space-between">
-              <EditableLabel
-                value={video.title}
-                onCommit={onTitleUpdate}
-                isDisabled={!isAuthenticated}
-              />
-              <ClickToCopyButton
-                label="Share"
-                value={`https://clipps.netlify.app/w/${video.assetId}`}
-              />
-            </Stack>
-            <Stack direction="row" spacing={2}>
-              <Typography variant="body2" color="text.secondary">
-                Uploaded {formatDistance(date, new Date(), { addSuffix: true })}
-              </Typography>
-            </Stack>
-          </CardContent>
-        </Card>
+        {isLoading ? (
+          <PlayerLoading />
+        ) : video ? (
+          <Player onTitleUpdate={onTitleUpdate} video={video} />
+        ) : (
+          <NotFound />
+        )}
       </Grid>
     </Grid>
   );
