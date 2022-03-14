@@ -1,4 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { Link, useParams } from "react-router-dom";
 import { Breadcrumbs, Grid, IconButton, Link as MuiLink, Typography } from "@mui/material";
 import ArrowBack from "@mui/icons-material/ArrowBack";
@@ -39,7 +40,7 @@ const WatchComponent: React.FC = () => {
   };
 
   return (
-    <Grid container spacing={3} pt={4}>
+    <Grid container spacing={3}>
       {isAuthenticated && (
         <Grid item xs={12}>
           <Breadcrumbs aria-label="breadcrumb">
@@ -55,11 +56,30 @@ const WatchComponent: React.FC = () => {
       )}
       <Grid item xs={12}>
         {isLoading ? (
-          <PlayerLoading />
+          <>
+            <Helmet>
+              <title>Clipps: Loading your content</title>
+              <meta name="description" content="Loading your content" />
+            </Helmet>
+            <PlayerLoading />
+          </>
         ) : video ? (
-          <Player onTitleUpdate={onTitleUpdate} video={video} />
+          <>
+            <Helmet>
+              <title>Clipps: {video.title}</title>
+              <meta name="description" content={video.title} />
+              <link rel="canonical" href={`https://clipps.netlify.app/w/${video.assetId}`} />
+            </Helmet>
+            <Player onTitleUpdate={onTitleUpdate} video={video} />
+          </>
         ) : (
-          <NotFound />
+          <>
+            <Helmet>
+              <title>Clipps: The video was deleted</title>
+              <meta name="description" content="The video was deleted" />
+            </Helmet>
+            <NotFound />
+          </>
         )}
       </Grid>
     </Grid>

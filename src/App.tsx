@@ -2,22 +2,15 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { Box, Container, CssBaseline } from "@mui/material";
 
-import { Header, RequireAuth } from "./components";
-import { Dashboard, Login, Register, Settings, Watch } from "./domains";
-
-const styles = {
-  container: {
-    // backgroundColor: "#fefefe",
-    // backgroundColor: "#000",
-  },
-};
+import { Copyright, Header, RequireAuth } from "./components";
+import { Dashboard, Landing, Login, Register, Settings, Watch } from "./domains";
 
 export const App = () => {
   return (
-    <Container maxWidth="lg" sx={styles.container}>
+    <Container maxWidth="lg">
       <CssBaseline />
       <Header />
-      <Box pt={8}>
+      <Box paddingY={10}>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -25,7 +18,7 @@ export const App = () => {
           <Route
             path="/"
             element={
-              <RequireAuth>
+              <RequireAuth fallbackComponent={Landing}>
                 <Dashboard />
               </RequireAuth>
             }
@@ -39,6 +32,9 @@ export const App = () => {
             }
           />
         </Routes>
+      </Box>
+      <Box position="fixed" bottom={0} left={0} width="100%">
+        <Copyright />
       </Box>
     </Container>
   );

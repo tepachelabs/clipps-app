@@ -39,10 +39,9 @@ export const VideoCard: React.FC<VideoCardProps> = ({
   isChecked,
   onCheck,
   onDelete,
-  onShare,
   video,
 }: VideoCardProps) => (
-  <Grid item xs={3}>
+  <Grid item xs={12} sm={4} md={3}>
     <Card variant="outlined">
       <Checkbox
         checked={isChecked}

@@ -1,6 +1,6 @@
 import React, { SyntheticEvent, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { AppBar, Box, Button, Toolbar } from "@mui/material";
+import { AppBar, Box, Link as MuiLink, Stack, Toolbar } from "@mui/material";
 
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectIsAuthenticated, setProfile, setToken, setVideos } from "../../reducers";
@@ -33,34 +33,34 @@ export const Header: React.FC = () => {
     <AppBar sx={styles.appBar}>
       <Toolbar>
         <Box flexGrow={1} justifyContent="flex-start">
-          <Button color="secondary" component={Link} to="/">
+          <MuiLink variant="h6" underline="hover" component={Link} to="/">
             Clipps
-          </Button>
+          </MuiLink>
         </Box>
         {isAuthenticated ? (
-          <>
-            <Box mr={2}>
-              <ProfileCard />
-            </Box>
-            <Button color="secondary" component={Link} to="/">
+          <Stack alignItems="center" direction="row" spacing={4} py={1}>
+            <MuiLink underline="hover" component={Link} to="/">
               Dashboard
-            </Button>
+            </MuiLink>
             {/*<Button color="inherit" component={Link} to="/settings">*/}
             {/*  Settings*/}
             {/*</Button>*/}
-            <Button color="secondary" onClick={onSignOut}>
-              Sign out
-            </Button>
-          </>
+            <MuiLink underline="hover" href="#" onClick={onSignOut}>
+              Sign Out
+            </MuiLink>
+            <Box mr={2}>
+              <ProfileCard />
+            </Box>
+          </Stack>
         ) : (
-          <>
-            <Button color="secondary" component={Link} to="/login">
+          <Stack direction="row" spacing={2} py={1} px={2}>
+            <MuiLink underline="hover" component={Link} to="/login">
               Login
-            </Button>
-            <Button color="secondary" component={Link} to="/register">
+            </MuiLink>
+            <MuiLink underline="hover" component={Link} to="/register">
               Register
-            </Button>
-          </>
+            </MuiLink>
+          </Stack>
         )}
       </Toolbar>
     </AppBar>

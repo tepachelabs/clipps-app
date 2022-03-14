@@ -6,14 +6,24 @@ import { selectIsAuthenticated } from "../../reducers";
 
 interface RequireAuthProps {
   children: JSX.Element;
+  fallbackComponent?: React.FC;
+  redirectTo?: string;
 }
 
-export const RequireAuth: React.FC<RequireAuthProps> = ({ children }: RequireAuthProps) => {
+export const RequireAuth: React.FC<RequireAuthProps> = ({
+  children,
+  fallbackComponent: Component,
+  redirectTo = "/login",
+}: RequireAuthProps) => {
   const location = useLocation();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
+  if (!isAuthenticated && Component) {
+    return <Component />;
+  }
+
   if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to={redirectTo} state={{ from: location }} replace />;
   }
 
   return children;

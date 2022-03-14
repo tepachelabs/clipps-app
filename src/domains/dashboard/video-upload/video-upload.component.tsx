@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { Alert, Box, Button, Chip, Grid, Typography } from "@mui/material";
+import { Alert, Box, Button, Chip, Grid, Stack, Typography } from "@mui/material";
 
 import { bytesToSize } from "../../../app/utils";
 import { useAppSelector } from "../../../app/hooks";
 import { create } from "../../../services";
 import { selectToken } from "../../../reducers";
+import { LoadingButton } from "../../../components/loading-button";
 
 import { Dropzone } from "./video-upload.styles";
 
@@ -15,7 +16,7 @@ interface VideoUploadProps {
 
 export const VideoUpload: React.FC<VideoUploadProps> = ({ onUploaded }: VideoUploadProps) => {
   const [files, setFiles] = useState<File[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string>();
   const { open, getRootProps, getInputProps } = useDropzone({
     accept: "video/mp4",
     onDrop: (acceptedFiles: File[]) => setFiles(acceptedFiles),
@@ -43,6 +44,11 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUploaded }: VideoUpl
   const onDiscard = (fileToDiscard: File) => {
     const filteredFiles = files.filter((file: File) => file.name !== fileToDiscard.name);
     setFiles(filteredFiles);
+  };
+
+  const onDiscardAll = () => {
+    setFiles([]);
+    setError("");
   };
 
   const fileRows = files.map((file: File) => (
@@ -73,7 +79,9 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUploaded }: VideoUpl
               <Typography variant="h5" onClick={open} color="text.secondary">
                 Drop your clip(s), or <b>browse</b>
               </Typography>
-              <Typography color="text.secondary">Supported: MP4. Max file size 100MB</Typography>
+              <Typography color="text.secondary">
+                Supported: MP4, MOV. Max file size 100MB
+              </Typography>
             </>
           )}
 
@@ -85,9 +93,18 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({ onUploaded }: VideoUpl
                 {fileRows}
               </Grid>
               <Grid item xs={12}>
-                <Button variant="outlined" onClick={onUpload} disabled={uploading || !!error}>
-                  Start upload
-                </Button>
+                <Stack direction="row" spacing={2}>
+                  <LoadingButton
+                    variant="outlined"
+                    onClick={onUpload}
+                    label="Start upload"
+                    isLoading={uploading}
+                    disabled={uploading || !!error}
+                  />
+                  <Button onClick={onDiscardAll} disabled={uploading}>
+                    Cancel
+                  </Button>
+                </Stack>
               </Grid>
             </Grid>
           )}

@@ -21,6 +21,7 @@ const getColor = (props: GetColorProps) => {
 
 export const Dropzone = styled("div")`
   align-items: center;
+  background-color: #fff;
   border-color: ${(props: GetColorProps) => getColor(props)};
   border-style: dashed;
   border-radius: 1em;

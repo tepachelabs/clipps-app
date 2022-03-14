@@ -1,32 +1,21 @@
 import React, { memo, SyntheticEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Link as MuiLink,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Alert, Box, Container, Grid, Link as MuiLink, TextField, Typography } from "@mui/material";
 
 import { useAppDispatch } from "../../app/hooks";
 import { setToken } from "../../reducers";
 import { login } from "../../services";
-import { Copyright } from "../../components";
+import { LoadingButton } from "../../components/loading-button";
 
 const styles = {
-  box: {
-    marginTop: 8,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
+  box: { marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center" },
   button: { mt: 3, mb: 2 },
-  copyright: { mt: 8, mb: 4 },
+  form: { mt: 1 },
 };
 
 const LoginComponent: React.FC = () => {
+  const [error, setError] = useState<string>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const dispatch = useAppDispatch();
@@ -34,10 +23,17 @@ const LoginComponent: React.FC = () => {
 
   const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    void login({ email, password }).then(({ data }) => {
-      dispatch(setToken(data.token));
-      navigate("/", { replace: true });
-    });
+    setError("");
+    setIsLoading(true);
+    void login({ email, password })
+      .then(({ data }) => {
+        dispatch(setToken(data.token));
+        navigate("/", { replace: true });
+      })
+      .catch(() => {
+        setError("User does not exist or email/password combination is wrong.");
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -47,7 +43,7 @@ const LoginComponent: React.FC = () => {
           Login
         </Typography>
       </Box>
-      <Box component="form" onSubmit={onSubmit} noValidate sx={{ mt: 1 }}>
+      <Box component="form" onSubmit={onSubmit} noValidate sx={styles.form}>
         <TextField
           margin="normal"
           required
@@ -72,9 +68,16 @@ const LoginComponent: React.FC = () => {
           value={password}
           onChange={({ target }) => setPassword(target.value)}
         />
-        <Button type="submit" fullWidth variant="contained" sx={styles.button}>
-          Sign In
-        </Button>
+        {error && <Alert severity="error">{error}</Alert>}
+        <LoadingButton
+          type="submit"
+          fullWidth
+          variant="contained"
+          sx={styles.button}
+          isLoading={isLoading}
+          label="Sign In"
+          disabled={!email || !password}
+        />
         <Grid container>
           <Grid item>
             <MuiLink component={Link} to="/register" variant="body2">
@@ -83,7 +86,6 @@ const LoginComponent: React.FC = () => {
           </Grid>
         </Grid>
       </Box>
-      <Copyright sx={styles.copyright} />
     </Container>
   );
 };

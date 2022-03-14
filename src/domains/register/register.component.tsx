@@ -1,32 +1,21 @@
 import React, { memo, SyntheticEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Link as MuiLink,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Alert, Box, Container, Grid, Link as MuiLink, TextField, Typography } from "@mui/material";
 
 import { useAppDispatch } from "../../app/hooks";
 import { setToken } from "../../reducers";
 import { register } from "../../services";
-import { Copyright } from "../../components";
+import { LoadingButton } from "../../components/loading-button";
 
 const styles = {
-  box: {
-    marginTop: 8,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
+  box: { marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center" },
   button: { mt: 3, mb: 2 },
-  copyright: { mt: 8, mb: 4 },
+  form: { mt: 1 },
 };
 
 const RegisterComponent: React.FC = () => {
+  const [error, setError] = useState<string>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -36,12 +25,26 @@ const RegisterComponent: React.FC = () => {
   const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
 
-    if (password !== confirmPassword) return;
+    setError("");
+    setIsLoading(true);
 
-    void register({ email, password, confirmPassword }).then(({ data }) => {
-      dispatch(setToken(data.token));
-      navigate("/", { replace: true });
-    });
+    if (password !== confirmPassword) {
+      setError("Password and password confirmation does not match");
+      setIsLoading(false);
+      return;
+    }
+
+    void register({ email, password, confirmPassword })
+      .then(({ data }) => {
+        dispatch(setToken(data.token));
+        navigate("/", { replace: true });
+      })
+      .catch(() => {
+        setError("Can't register user, already exists?");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -51,7 +54,7 @@ const RegisterComponent: React.FC = () => {
           Register
         </Typography>
       </Box>
-      <Box component="form" onSubmit={onSubmit} noValidate sx={{ mt: 1 }}>
+      <Box component="form" onSubmit={onSubmit} noValidate sx={styles.form}>
         <TextField
           margin="normal"
           required
@@ -87,9 +90,16 @@ const RegisterComponent: React.FC = () => {
           value={confirmPassword}
           onChange={({ target }) => setConfirmPassword(target.value)}
         />
-        <Button type="submit" fullWidth variant="contained" sx={styles.button}>
-          Sign Up
-        </Button>
+        {error && <Alert severity="error">{error}</Alert>}
+        <LoadingButton
+          type="submit"
+          fullWidth
+          variant="contained"
+          sx={styles.button}
+          isLoading={isLoading}
+          label="Sign Up"
+          disabled={!email || !password || !confirmPassword}
+        />
         <Grid container>
           <Grid item>
             <MuiLink component={Link} to="/login" variant="body2">
@@ -98,7 +108,6 @@ const RegisterComponent: React.FC = () => {
           </Grid>
         </Grid>
       </Box>
-      <Copyright sx={styles.copyright} />
     </Container>
   );
 };

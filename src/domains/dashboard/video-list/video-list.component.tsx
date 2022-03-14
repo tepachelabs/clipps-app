@@ -18,6 +18,10 @@ interface VideoListProps {
 const getFiltered = (videos: Video[], searchQuery: string): Video[] =>
   videos.filter((video) => video.title.toLowerCase().includes(searchQuery.toLowerCase()));
 
+const styles = {
+  additionalControls: { alignSelf: "flex-end" },
+};
+
 export const VideoList: React.FC<VideoListProps> = ({
   additionalControls,
   children,
@@ -101,14 +105,16 @@ export const VideoList: React.FC<VideoListProps> = ({
                 size="small"
                 onChange={({ target }) => setSearchQuery(target.value)}
               />
-              <Box sx={{ alignSelf: "flex-end" }}>{additionalControls}</Box>
+              <Box sx={styles.additionalControls}>{additionalControls}</Box>
             </Stack>
           )}
         </Card>
       </Grid>
-      <Grid item xs={12}>
-        {children}
-      </Grid>
+      {children && (
+        <Grid item xs={12}>
+          {children}
+        </Grid>
+      )}
       {getFiltered(videos, searchQuery).map((video: Video) => (
         <ItemRenderer
           key={video.assetId}
