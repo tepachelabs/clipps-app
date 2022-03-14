@@ -1,6 +1,7 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
 import { Alert, Button, Grid } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { Helmet } from "react-helmet-async";
 
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Video } from "../../models";
@@ -70,6 +71,11 @@ const DashboardComponent: React.FC = () => {
 
   return (
     <Grid container spacing={3}>
+      <Helmet>
+        <title>Clipps: Dashboard</title>
+        <meta name="description" content="Manage your content" />
+      </Helmet>
+
       <Grid item xs={12} mt={2}>
         <VideoUpload onUploaded={onUploaded} />
       </Grid>

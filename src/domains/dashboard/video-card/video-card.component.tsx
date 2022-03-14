@@ -59,7 +59,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <ClickToCopyButton label="Share" value={`https://clipps.netlify.app/w/${video.assetId}`} />
+        <ClickToCopyButton label="Share" value={`https://clipps.io/w/${video.assetId}`} />
         <Button size="small" onClick={() => onDelete?.(video)}>
           Delete
         </Button>

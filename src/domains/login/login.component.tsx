@@ -1,9 +1,9 @@
-import React, { memo, SyntheticEvent, useState } from "react";
+import React, { memo, SyntheticEvent, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Alert, Box, Container, Grid, Link as MuiLink, TextField, Typography } from "@mui/material";
 
-import { useAppDispatch } from "../../app/hooks";
-import { setToken } from "../../reducers";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { selectIsAuthenticated, setToken } from "../../reducers";
 import { login } from "../../services";
 import { LoadingButton } from "../../components/loading-button";
 
@@ -14,12 +14,22 @@ const styles = {
 };
 
 const LoginComponent: React.FC = () => {
+  const [message, setMessage] = useState<string>();
   const [error, setError] = useState<string>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(setToken(""));
+      setMessage("You were signed out. Please log in again.");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -44,6 +54,7 @@ const LoginComponent: React.FC = () => {
         </Typography>
       </Box>
       <Box component="form" onSubmit={onSubmit} noValidate sx={styles.form}>
+        {message && <Alert severity="info">{message}</Alert>}
         <TextField
           margin="normal"
           required

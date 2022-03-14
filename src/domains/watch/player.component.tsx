@@ -34,7 +34,7 @@ export const Player: React.FC<PlayerProps> = ({ onTitleUpdate, video }: PlayerPr
           <EditableLabel value={video.title} onCommit={onTitleUpdate} />
           <ClickToCopyButton
             label="Share"
-            value={`https://clipps.netlify.app/w/${video.assetId}`}
+            value={`https://clipps.io/w/${video.assetId}`}
             variant="outlined"
           />
         </Stack>

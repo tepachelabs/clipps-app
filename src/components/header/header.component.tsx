@@ -46,7 +46,7 @@ export const Header: React.FC = () => {
             {/*  Settings*/}
             {/*</Button>*/}
             <MuiLink underline="hover" href="#" onClick={onSignOut}>
-              Sign Out
+              Sign out
             </MuiLink>
             <Box mr={2}>
               <ProfileCard />

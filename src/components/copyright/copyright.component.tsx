@@ -14,7 +14,7 @@ export const Copyright: React.FC<TypographyProps> = (props: TypographyProps) => 
   <Paper sx={styles.paper}>
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {"Copyright © "}
-      <Link color="inherit" href="https://clipps.netlify.app/">
+      <Link color="inherit" href="https://clipps.io/">
         Clipps
       </Link>{" "}
       {new Date().getFullYear()}

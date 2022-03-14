@@ -68,7 +68,15 @@ const WatchComponent: React.FC = () => {
             <Helmet>
               <title>Clipps: {video.title}</title>
               <meta name="description" content={video.title} />
-              <link rel="canonical" href={`https://clipps.netlify.app/w/${video.assetId}`} />
+              <meta property="og:title" content={video.title} />
+              <meta property="og:type" content="video.movie" />
+              <meta property="og:url" content={`https://clipps.io/w/${video.assetId}`} />
+              <meta property="og:image" content={video.posterUrl} />
+              <meta name="twitter:title" content={video.title} />
+              <meta name="twitter:description" content={video.title} />
+              <meta name="twitter:image" content={video.posterUrl} />
+              <meta name="twitter:card" content={video.posterUrl} />
+              <link rel="canonical" href={`https://clipps.io/w/${video.assetId}`} />
             </Helmet>
             <Player onTitleUpdate={onTitleUpdate} video={video} />
           </>
