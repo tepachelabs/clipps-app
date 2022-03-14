@@ -39,7 +39,7 @@ export const VideoCardDeleted: React.FC<VideoCardDeletedProps> = ({
   onRestore,
   video,
 }: VideoCardDeletedProps) => (
-  <Grid item xs={3}>
+  <Grid item xs={12} sm={4} md={3}>
     <Card variant="muted">
       <Checkbox
         checked={isChecked}

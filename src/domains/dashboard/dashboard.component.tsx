@@ -33,6 +33,7 @@ const DashboardComponent: React.FC = () => {
 
   const onUploaded = () => {
     void dispatch(fetchVideos(token));
+    void dispatch(fetchProfile(token));
   };
 
   const onToggleList = () => {
