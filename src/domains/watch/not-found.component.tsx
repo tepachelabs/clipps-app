@@ -8,7 +8,8 @@ export const NotFound: React.FC = () => (
         Video deleted!
       </Typography>
       <Typography variant="body1" color="text.secondary">
-        The video you’re trying to access doesn’t exist anymore.
+        The video you’re trying to access doesn’t exist anymore, or the creator decided to not
+        longer share it.
       </Typography>
     </CardContent>
   </Card>

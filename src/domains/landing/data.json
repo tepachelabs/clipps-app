@@ -1,0 +1,20 @@
+{
+  "faq": [
+    {
+      "question": "What file types are allowed?",
+      "answer": "MP4 & MOV video formats 🎥."
+    },
+    {
+      "question": "Why invitation only?",
+      "answer": "Video hosting is pricey 💸. We can't afford huge virtual space at the moment, so every megabyte counts. Apologies for the inconvenience."
+    },
+    {
+      "question": "Can I pay to get more space?",
+      "answer": "We're working on it 💾. But we don't have an ETA yet."
+    },
+    {
+      "question": "Where is my invite?",
+      "answer": "Did you check your spam box? If you didn't receive it, we might ran out of available slots. We're working on having more capacity, thanks for your patience!"
+    }
+  ]
+}

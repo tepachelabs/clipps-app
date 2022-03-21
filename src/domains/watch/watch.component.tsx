@@ -58,8 +58,8 @@ const WatchComponent: React.FC = () => {
         {isLoading ? (
           <>
             <Helmet>
-              <title>Clipps: Loading your content</title>
-              <meta name="description" content="Loading your content" />
+              <title>Share your Clipps, without the hassle.</title>
+              <meta name="description" content="Share your Clipps, without the hassle." />
             </Helmet>
             <PlayerLoading />
           </>
@@ -67,7 +67,7 @@ const WatchComponent: React.FC = () => {
           <>
             <Helmet>
               <title>Clipps: {video.title}</title>
-              <meta name="description" content={video.title} />
+              <meta name="description" content="Share your Clipps, without the hassle." />
               <meta property="og:title" content={video.title} />
               <meta property="og:type" content="video.movie" />
               <meta property="og:url" content={`https://clipps.io/w/${video.assetId}`} />
@@ -84,7 +84,10 @@ const WatchComponent: React.FC = () => {
           <>
             <Helmet>
               <title>Clipps: The video was deleted</title>
-              <meta name="description" content="The video was deleted" />
+              <meta
+                name="description"
+                content="The video was deleted or creator decided to not share it."
+              />
             </Helmet>
             <NotFound />
           </>
