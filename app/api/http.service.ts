@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/browser";
 import type { AxiosError, AxiosInstance } from "axios";
 import axios from "axios";
 
@@ -10,6 +11,8 @@ interface ClippsResponseError {
 }
 
 const onResponseError = (error: AxiosError<ClippsResponseError>): Promise<AxiosError> => {
+  Sentry.captureException(error);
+
   if (error.response?.status === 401) {
     console.error("Token is invalid or not included");
     location.pathname = "/login";

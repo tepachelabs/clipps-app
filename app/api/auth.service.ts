@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/browser";
 import type { AxiosError } from "axios";
 import axios from "axios";
 
@@ -24,6 +25,7 @@ export const login = async ({ email, password }: LoginForm): Promise<LoginRespon
       return data;
     })
     .catch((error: AxiosError) => {
+      Sentry.captureException(error);
       if (error.response?.status === 422) {
         return { error: "Email/password combination is wrong." };
       }
