@@ -17,13 +17,11 @@ type LoginResponse = {
 
 export const login = async ({ email, password }: LoginForm): Promise<LoginResponse> =>
   axios
-    .post<LoginResponse>(`${apiGatewayUrl}/v1/login`, {
+    .post<LoginResponse>(`${apiGatewayUrl}/login`, {
       email,
       password,
     })
-    .then(({ data }) => {
-      return data;
-    })
+    .then(({ data }) => data)
     .catch((error: AxiosError) => {
       Sentry.captureException(error);
       if (error.response?.status === 422) {
