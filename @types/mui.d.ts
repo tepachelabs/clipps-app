@@ -14,8 +14,14 @@ declare module "@mui/material/styles" {
   }
 }
 
+declare module "@mui/material/Button" {
+  interface ButtonPropsVariantOverrides {
+    inverted: true;
+  }
+}
+
 declare module "@mui/material/Paper" {
   interface PaperPropsVariantOverrides {
-    muted: true;
+    secondary: true;
   }
 }
