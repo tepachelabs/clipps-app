@@ -24,6 +24,6 @@ yarn-error.log*
 .idea
 
 /.cache
-/build
+/.netlify
 /public/build
 .env
