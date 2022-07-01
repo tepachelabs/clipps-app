@@ -12,8 +12,9 @@ import type { ActionFunction } from "@remix-run/node";
 import type { MetaFunction } from "@remix-run/node";
 import { Form, Link, useActionData } from "@remix-run/react";
 
+import { login } from "~/api/auth.service";
 import { PATHS } from "~/constants";
-import { createUserSession, login } from "~/utils/session.server";
+import { createUserSession } from "~/utils/session.server";
 
 type ActionData = {
   error?: string;
@@ -98,9 +99,7 @@ export default function Index() {
           Sign In
         </Button>
 
-        {actionData?.error && (
-          <Alert severity="error">{actionData?.error}</Alert>
-        )}
+        {actionData?.error && <Alert severity="error">{actionData?.error}</Alert>}
       </Box>
 
       <Stack>

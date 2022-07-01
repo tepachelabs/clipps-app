@@ -9,9 +9,7 @@ interface ClippsResponseError {
   errors?: Error[];
 }
 
-const onResponseError = (
-  error: AxiosError<ClippsResponseError>
-): Promise<AxiosError> => {
+const onResponseError = (error: AxiosError<ClippsResponseError>): Promise<AxiosError> => {
   if (error.response?.status === 401) {
     console.error("Token is invalid or not included");
     location.pathname = "/login";
@@ -27,9 +25,6 @@ const axiosInstance: AxiosInstance = axios.create({
   },
 });
 
-axiosInstance.interceptors.response.use(
-  (response) => response,
-  onResponseError
-);
+axiosInstance.interceptors.response.use((response) => response, onResponseError);
 
 export const api = axiosInstance;

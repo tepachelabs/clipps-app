@@ -1,35 +1,4 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
-import type { AxiosError } from "axios";
-import axios from "axios";
-
-type LoginForm = {
-  email: string;
-  password: string;
-};
-
-type LoginResponse = {
-  token?: string;
-  error?: string;
-};
-
-export const login = async ({
-  email,
-  password,
-}: LoginForm): Promise<LoginResponse> =>
-  axios
-    .post<LoginResponse>("http://127.0.0.1:3333/v1/login", {
-      email,
-      password,
-    })
-    .then(({ data }) => {
-      return data;
-    })
-    .catch((error: AxiosError) => {
-      if (error.response?.status === 422) {
-        return { error: "Email/password combination is wrong." };
-      }
-      return { error: "Service appears offline. Try again later!" };
-    });
 
 const sessionSecret = process.env.SESSION_SECRET;
 
@@ -72,7 +41,7 @@ export const getToken = async (request: Request) => {
 
 export const requireToken = async (
   request: Request,
-  redirectTo: string = new URL(request.url).pathname
+  redirectTo: string = new URL(request.url).pathname,
 ) => {
   const session = await getUserSession(request);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
