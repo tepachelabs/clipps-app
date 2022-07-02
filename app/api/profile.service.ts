@@ -1,6 +1,6 @@
 import type { AxiosError } from "axios";
 
-import type { Profile } from "~/models/profile.model";
+import type { Profile } from "~/models";
 
 import { api } from "./http.service";
 
@@ -36,7 +36,7 @@ export const getProfile = async (token: string): Promise<Profile | null> =>
 export const updateProfile = async (
   token: string,
   username: string,
-  avatar: string
+  avatar: string,
 ): Promise<Profile | null> => {
   return api
     .patch<ApiProfile>(
@@ -46,7 +46,7 @@ export const updateProfile = async (
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     )
     .then(({ data }) => parseProfileEntity(data))
     .catch((error: AxiosError) => {

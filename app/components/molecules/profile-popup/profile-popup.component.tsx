@@ -9,11 +9,10 @@ import {
 } from "@mui/material";
 import React, { useRef } from "react";
 
-import type { Profile } from "~/models/profile.model";
+import { CircularProgressWithLabel } from "~/components/atoms/circular-progress-with-label";
+import type { Profile } from "~/models";
 
-import { CircularProgressWithLabel } from "../circular-progress-with-label";
-
-interface ProfileCardProps {
+interface ProfilePopupProps {
   profile: Profile;
 }
 
@@ -24,7 +23,7 @@ const styles = {
   avatar: { width: 24, height: 24 },
 };
 
-export const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
+export const ProfilePopup: React.FC<ProfilePopupProps> = ({ profile }) => {
   const cardRef = useRef<HTMLButtonElement>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | EventTarget>(null);
 
@@ -43,11 +42,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
             <Typography color="text.secondary" textAlign="right">
               {profile.username}
             </Typography>
-            <Avatar
-              alt={profile.username}
-              src={profile.avatar}
-              sx={styles.avatar}
-            >
+            <Avatar alt={profile.username} src={profile.avatar} sx={styles.avatar}>
               {profile.username?.[0]}
             </Avatar>
           </Stack>
@@ -62,31 +57,13 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({ profile }) => {
       >
         <ClickAwayListener onClickAway={() => togglePopper()}>
           <Paper variant="outlined">
-            <Stack
-              direction="column"
-              justifyContent="center"
-              alignItems="center"
-              spacing={2}
-              p={3}
-            >
+            <Stack direction="column" justifyContent="center" alignItems="center" spacing={2} p={3}>
               <CircularProgressWithLabel value={progress} size={72} />
-              <Stack
-                direction="column"
-                justifyContent="center"
-                alignItems="center"
-              >
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  textAlign="right"
-                >
+              <Stack direction="column" justifyContent="center" alignItems="center">
+                <Typography variant="caption" color="text.secondary" textAlign="right">
                   Your space:
                 </Typography>
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  textAlign="right"
-                >
+                <Typography variant="caption" color="text.secondary" textAlign="right">
                   Used {quotaInMb}/1000 MB
                 </Typography>
               </Stack>

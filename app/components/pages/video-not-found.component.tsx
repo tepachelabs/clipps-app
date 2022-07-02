@@ -1,26 +1,18 @@
 import { ArrowBack } from "@mui/icons-material";
-import {
-  Breadcrumbs,
-  Grid,
-  IconButton,
-  Link as MuiLink,
-  Typography,
-} from "@mui/material";
+import { Breadcrumbs, Grid, IconButton, Link as MuiLink, Typography } from "@mui/material";
 import { Link } from "@remix-run/react";
 import React from "react";
 
-import { Layout } from "~/components/organisms/layout.component";
+import { tvOffIcon } from "~/components/atoms/icon";
+import { Layout } from "~/components/organisms/layout";
 import { PATHS } from "~/constants";
-import type { Profile } from "~/models/profile.model";
-import tvOffIcon from "~/svg/tv-off.svg";
+import type { Profile } from "~/models";
 
 type VideoNotFoundPageProps = {
   profile: Profile | null;
 };
 
-export const VideoNotFoundPage: React.FC<VideoNotFoundPageProps> = ({
-  profile,
-}) => (
+export const VideoNotFoundPage: React.FC<VideoNotFoundPageProps> = ({ profile }) => (
   <Layout profile={profile}>
     {profile && (
       <Grid item xs={12}>
@@ -40,8 +32,7 @@ export const VideoNotFoundPage: React.FC<VideoNotFoundPageProps> = ({
       </Typography>
       <img src={tvOffIcon} alt="TV turned off" width={200} />
       <Typography mt={4}>
-        This video might be deleted, or its access is restricted by privacy
-        reasons.
+        This video might be deleted, or its access is restricted by privacy reasons.
       </Typography>
       {profile ? (
         <MuiLink component={Link} to={PATHS.DASHBOARD}>

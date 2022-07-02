@@ -1,9 +1,9 @@
 import { Container } from "@mui/material";
 import React from "react";
 
-import { Copyright } from "~/components/atoms/copyright";
-import { AnonNav, UserNav } from "~/components/molecules";
-import type { Profile } from "~/models/profile.model";
+import { Header, HeaderWithProfile } from "~/components/molecules/header";
+import { Copyright } from "~/components/organisms/copyright";
+import type { Profile } from "~/models";
 
 interface PageProps {
   children: React.ReactNode;
@@ -22,7 +22,7 @@ export const Layout = ({ children, profile }: PageProps) => {
   return (
     <>
       <Container maxWidth="lg" sx={styles.container}>
-        {profile ? <UserNav profile={profile} /> : <AnonNav />}
+        {profile ? <HeaderWithProfile profile={profile} /> : <Header />}
         {children}
       </Container>
       <Copyright />

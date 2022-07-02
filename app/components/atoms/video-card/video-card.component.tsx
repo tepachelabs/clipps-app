@@ -14,7 +14,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import { ClickToCopyButton } from "~/components/atoms/click-to-copy-button";
-import type { Video } from "~/models/video.model";
+import { PATHS } from "~/constants";
+import type { Video } from "~/models";
 import { generatePublicUrl } from "~/utils/generate-public-url";
 
 export interface VideoCardProps {
@@ -49,13 +50,8 @@ export const VideoCard: React.FC<VideoCardProps> = ({
         onChange={({ target }) => onCheck?.({ checked: target.checked, video })}
         sx={styles.checkbox}
       />
-      <CardActionArea component={Link} to={`/w/${video.assetId}`}>
-        <CardMedia
-          component="img"
-          width="100%"
-          image={video.posterUrl}
-          alt={video.title}
-        />
+      <CardActionArea component={Link} to={PATHS.getVideoPath(video.assetId)}>
+        <CardMedia component="img" width="100%" image={video.posterUrl} alt={video.title} />
         <CardContent>
           <Tooltip title={video.title}>
             <Typography gutterBottom={false} noWrap>
@@ -65,10 +61,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <ClickToCopyButton
-          label="Share"
-          value={generatePublicUrl(video.assetId)}
-        />
+        <ClickToCopyButton label="Share" value={generatePublicUrl(video.assetId)} />
         <Button size="small" onClick={() => onDelete?.(video)}>
           Delete
         </Button>

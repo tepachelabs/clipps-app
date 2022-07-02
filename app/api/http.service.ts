@@ -2,7 +2,7 @@ import * as Sentry from "@sentry/browser";
 import type { AxiosError, AxiosInstance } from "axios";
 import axios from "axios";
 
-import config from "../config";
+import config from "~/config";
 
 const { apiGatewayUrl } = config;
 

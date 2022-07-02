@@ -1,12 +1,12 @@
+import { CacheProvider } from "@emotion/react";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { RemixBrowser } from "@remix-run/react";
 import React, { useState } from "react";
 import { hydrate } from "react-dom";
-import { RemixBrowser } from "@remix-run/react";
-import { CssBaseline, ThemeProvider } from "@mui/material";
-import { CacheProvider } from "@emotion/react";
 
-import createEmotionCache from "~/createEmotionCache";
-import ClientStyleContext from "~/ClientStyleContext";
 import theme from "~/theme";
+import ClientStyleContext from "~/utils/ClientStyleContext";
+import createEmotionCache from "~/utils/createEmotionCache";
 
 interface ClientCacheProviderProps {
   children: React.ReactNode;

@@ -3,8 +3,7 @@ import { formatDistance } from "date-fns";
 import React, { useMemo } from "react";
 
 import { ClickToCopyButton } from "~/components/atoms/click-to-copy-button";
-import { EditableLabel } from "~/components/atoms/editable-label";
-import type { Video } from "~/models/video.model";
+import type { Video } from "~/models";
 import { generatePublicUrl } from "~/utils/generate-public-url";
 
 interface VideoPlayerProps {
@@ -19,7 +18,7 @@ const styles = {
   },
 };
 
-export const VideoPlayer = ({ onTitleUpdate, video }: VideoPlayerProps) => {
+export const VideoPlayer = ({ video }: VideoPlayerProps) => {
   const date = useMemo(() => new Date(video.createdAt), [video.createdAt]);
 
   return (

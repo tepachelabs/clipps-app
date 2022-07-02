@@ -5,8 +5,8 @@ import * as Sentry from "@sentry/react";
 import { BrowserTracing } from "@sentry/tracing";
 import React, { useContext } from "react";
 
-import ClientStyleContext from "~/ClientStyleContext";
 import theme from "~/theme";
+import ClientStyleContext from "~/utils/ClientStyleContext";
 
 Sentry.init({
   dsn: "https://b2b65009184440088047f2379fb9584a@o176249.ingest.sentry.io/6544489",

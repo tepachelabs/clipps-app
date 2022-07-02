@@ -1,17 +1,10 @@
-import {
-  Button,
-  Card,
-  Grid,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, Card, Grid, Stack, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/material";
 import React, { useCallback, useMemo, useState } from "react";
 
-import type { Video } from "~/models/video.model";
+import type { VideoCardProps } from "~/components/atoms/video-card";
+import type { Video } from "~/models";
 
-import type { VideoCardProps } from "../video-card";
 import { DeleteConfirmation } from "./delete-confirmation.component";
 
 interface VideoListProps {
@@ -23,9 +16,7 @@ interface VideoListProps {
 }
 
 const getFiltered = (videos: Video[], searchQuery: string): Video[] =>
-  videos.filter((video) =>
-    video.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  videos.filter((video) => video.title.toLowerCase().includes(searchQuery.toLowerCase()));
 
 const styles = {
   additionalControls: { alignSelf: "flex-end" },
@@ -40,21 +31,18 @@ export const VideoList: React.FC<VideoListProps> = ({
 }: VideoListProps) => {
   const [selection, setSelection] = useState<Video[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [confirmationOpen, setConfirmationOpen] =
-    React.useState<boolean>(false);
+  const [confirmationOpen, setConfirmationOpen] = React.useState<boolean>(false);
 
   const onSelect = useCallback(
     ({ video, checked }: { video: Video; checked: boolean }) => {
       if (checked) {
         setSelection([...selection, video]);
       } else {
-        const filtered = selection.filter(
-          (current) => current.assetId !== video.assetId
-        );
+        const filtered = selection.filter((current) => current.assetId !== video.assetId);
         setSelection(filtered);
       }
     },
-    [selection]
+    [selection],
   );
 
   const onSelectAll = useCallback(() => setSelection(videos), [videos]);
@@ -73,20 +61,18 @@ export const VideoList: React.FC<VideoListProps> = ({
     setSelection([]);
   }, []);
 
-  const onDeleteAccept = useCallback(async () => {
-    await onDeleteItems?.(selection);
-    setConfirmationOpen(false);
-    setSelection([]);
+  const onDeleteAccept = useCallback(() => {
+    onDeleteItems?.(selection).finally(() => {
+      setConfirmationOpen(false);
+      setSelection([]);
+    });
   }, [onDeleteItems, selection]);
 
   const onClearSelection = useCallback(() => setSelection([]), []);
 
   const selectionLabel = useMemo(
-    () =>
-      selection.length === 1
-        ? "Selected 1 item."
-        : `Selected ${selection.length} items.`,
-    [selection.length]
+    () => (selection.length === 1 ? "Selected 1 item." : `Selected ${selection.length} items.`),
+    [selection.length],
   );
 
   return (
@@ -100,14 +86,7 @@ export const VideoList: React.FC<VideoListProps> = ({
       <Grid item xs={12}>
         <Card variant="outlined">
           {selection.length ? (
-            <Stack
-              direction="row"
-              spacing={2}
-              alignItems="center"
-              p={1}
-              pl={2}
-              height={56}
-            >
+            <Stack direction="row" spacing={2} alignItems="center" p={1} pl={2} height={56}>
               <Typography gutterBottom={false}>{selectionLabel}</Typography>
               <Button variant="outlined" onClick={onSelectAll}>
                 Select all
@@ -120,12 +99,7 @@ export const VideoList: React.FC<VideoListProps> = ({
               </Button>
             </Stack>
           ) : (
-            <Stack
-              direction="row"
-              spacing={2}
-              justifyContent="space-between"
-              p={1}
-            >
+            <Stack direction="row" spacing={2} justifyContent="space-between" p={1}>
               <TextField
                 label="Filter..."
                 variant="outlined"
@@ -146,9 +120,7 @@ export const VideoList: React.FC<VideoListProps> = ({
         <ItemRenderer
           key={video.assetId}
           video={video}
-          isChecked={
-            !!selection.find((current) => current.assetId === video.assetId)
-          }
+          isChecked={!!selection.find((current) => current.assetId === video.assetId)}
           onCheck={onSelect}
           onDelete={() => onDelete(video)}
         />

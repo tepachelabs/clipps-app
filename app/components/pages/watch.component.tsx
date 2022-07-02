@@ -1,18 +1,11 @@
 import { ArrowBack } from "@mui/icons-material";
-import {
-  Breadcrumbs,
-  Grid,
-  IconButton,
-  Link as MuiLink,
-  Typography,
-} from "@mui/material";
+import { Breadcrumbs, Grid, IconButton, Link as MuiLink, Typography } from "@mui/material";
 import { Link } from "@remix-run/react";
 import React from "react";
 
-import { VideoPlayer } from "~/components/atoms/video-player.component";
-import { Layout } from "~/components/organisms/layout.component";
-import type { Profile } from "~/models/profile.model";
-import type { Video } from "~/models/video.model";
+import { VideoPlayer } from "~/components/molecules/video-player";
+import { Layout } from "~/components/organisms/layout";
+import type { Profile, Video } from "~/models";
 
 type WatchPageProps = {
   profile: Profile | null;

@@ -13,19 +13,14 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
+import { desktopIcon, emailIcon, multiIcon, switchIcon, tvIcon } from "~/components/atoms/icon";
 import { PATHS } from "~/constants";
-import desktopIcon from "~/svg/desktop.svg";
-import emailIcon from "~/svg/email.svg";
-import multiIcon from "~/svg/multi.svg";
-import switchIcon from "~/svg/switch.svg";
-import tvIcon from "~/svg/tv.svg";
 
 const FOUR = 4;
 const faq = [
   {
     question: "What file types are allowed?",
-    answer:
-      "MP4 video format 🎥. We're working on adding support for more formats.",
+    answer: "MP4 video format 🎥. We're working on adding support for more formats.",
   },
   {
     question: "Why invitation only?",
@@ -43,8 +38,7 @@ const faq = [
   },
   {
     question: "How long do videos stay on Clipps?",
-    answer:
-      "We don't delete your clipps as long as you keep them away from your trash bin.",
+    answer: "We don't delete your clipps as long as you keep them away from your trash bin.",
   },
   {
     question: "Who can see my clipps?",
@@ -97,9 +91,7 @@ export const LandingPage = () => (
     <Grid container spacing={FOUR} sx={styles.section}>
       <Grid item xs={12}>
         <Typography variant="h4">Features</Typography>
-        <Typography pb={4}>
-          This is what makes us different from the others.
-        </Typography>
+        <Typography pb={4}>This is what makes us different from the others.</Typography>
       </Grid>
       <Grid item xs={6} md={4} textAlign="center">
         <img src={multiIcon} alt="placeholder" height={120} />
@@ -107,9 +99,7 @@ export const LandingPage = () => (
           1000MB of cloud storage
         </Typography>
         <Typography pt={2}>
-          {
-            "Upload all the clipps you need, we don't limit the number of files you can store."
-          }
+          {"Upload all the clipps you need, we don't limit the number of files you can store."}
         </Typography>
       </Grid>
       <Grid item xs={6} md={4} textAlign="center">
@@ -117,9 +107,7 @@ export const LandingPage = () => (
         <Typography mt={2} variant="h5">
           Unlimited views
         </Typography>
-        <Typography pt={2}>
-          Share your clipps with everyone, everywhere.
-        </Typography>
+        <Typography pt={2}>Share your clipps with everyone, everywhere.</Typography>
       </Grid>
       <Grid item xs={6} md={4} textAlign="center">
         <img src={switchIcon} alt="placeholder" height={120} />
@@ -127,18 +115,14 @@ export const LandingPage = () => (
           Sharing kill switch,
           <br /> account &amp; video level
         </Typography>
-        <Typography pt={2}>
-          We provide you with privacy tools in case you need them.
-        </Typography>
+        <Typography pt={2}>We provide you with privacy tools in case you need them.</Typography>
       </Grid>
     </Grid>
 
     <Grid container spacing={FOUR} sx={styles.section} justifyContent="center">
       <Grid item xs={12}>
         <Typography variant="h4">Request an invite</Typography>
-        <Typography>
-          Early access is by invitation only. Request your invite today!
-        </Typography>
+        <Typography>Early access is by invitation only. Request your invite today!</Typography>
       </Grid>
       <Grid item xs={12} md={7}>
         <Stack direction="row" spacing={4} alignItems="center">
@@ -172,18 +156,16 @@ export const LandingPage = () => (
         <Typography pb={2}>Frequently asked questions.</Typography>
       </Grid>
       <Grid item xs={10}>
-        {faq.map(
-          ({ question, answer }: { answer: string; question: string }) => (
-            <Accordion key={question} variant="outlined">
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>{question}</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography>{answer}</Typography>
-              </AccordionDetails>
-            </Accordion>
-          )
-        )}
+        {faq.map(({ question, answer }: { answer: string; question: string }) => (
+          <Accordion key={question} variant="outlined">
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography>{question}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>{answer}</Typography>
+            </AccordionDetails>
+          </Accordion>
+        ))}
         <Typography pt={3}>
           Additional questions? Drop us an email at{" "}
           <MuiLink underline="hover" component={Link} to="" href={PATHS.MAILTO}>

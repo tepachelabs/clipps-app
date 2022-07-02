@@ -6,8 +6,7 @@ import { getProfile } from "~/api/profile.service";
 import { fetchVideo } from "~/api/videos.service";
 import { VideoNotFoundPage } from "~/components/pages/video-not-found.component";
 import { WatchPage } from "~/components/pages/watch.component";
-import type { Profile } from "~/models/profile.model";
-import type { Video } from "~/models/video.model";
+import type { Profile, Video } from "~/models";
 import { generatePublicUrl } from "~/utils/generate-public-url";
 import { getToken } from "~/utils/session.server";
 
@@ -21,14 +20,11 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   if (!params.videoId) throw new Error("Video not found");
 
   const token = await getToken(request);
-  let video = null;
   let profile = null;
+  let video;
 
   if (token) {
-    [video, profile] = await Promise.all([
-      fetchVideo(params.videoId),
-      getProfile(token),
-    ]);
+    [video, profile] = await Promise.all([fetchVideo(params.videoId), getProfile(token)]);
   } else {
     video = await fetchVideo(params.videoId);
   }
@@ -76,8 +72,7 @@ export const meta: MetaFunction = ({ data }: { data?: LoaderData }) => {
       // "og:image:width": "1280",
       // "og:image:height": "720",
       "twitter:title": "This video has been removed or access is protected.",
-      "twitter:description":
-        "This video has been removed or access is protected.",
+      "twitter:description": "This video has been removed or access is protected.",
       // "twitter:image": "",
       "twitter:card": "This video has been removed or access is protected.",
     };

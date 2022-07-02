@@ -1,12 +1,4 @@
-import {
-  Alert,
-  Box,
-  Button,
-  Chip,
-  Grid,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Alert, Box, Button, Chip, Grid, Stack, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 
@@ -35,24 +27,23 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({
   });
   const [uploading, setUploading] = useState<boolean>();
 
-  const onUpload = async () => {
+  const onUpload = () => {
     setUploading(true);
-    try {
-      await Promise.all(files.map((file) => uploadVideo(token, file)));
-      onUploaded?.();
-      setFiles([]);
-      setUploading(false);
-    } catch (e) {
-      const { message } = e as { message: string };
-      setError(message);
-      setUploading(false);
-    }
+    Promise.all(files.map((file) => uploadVideo(token, file)))
+      .then(() => {
+        onUploaded?.();
+        setFiles([]);
+        setUploading(false);
+      })
+      .catch((e) => {
+        const { message } = e as { message: string };
+        setError(message);
+        setUploading(false);
+      });
   };
 
   const onDiscard = (fileToDiscard: File) => {
-    const filteredFiles = files.filter(
-      (file: File) => file.name !== fileToDiscard.name
-    );
+    const filteredFiles = files.filter((file: File) => file.name !== fileToDiscard.name);
     setFiles(filteredFiles);
   };
 
@@ -82,24 +73,18 @@ export const VideoUpload: React.FC<VideoUploadProps> = ({
               <Typography variant="h5" color="text.secondary">
                 Uploading your clips...
               </Typography>
-              <Typography color="text.secondary">
-                Please wait a few mins
-              </Typography>
+              <Typography color="text.secondary">Please wait a few mins</Typography>
             </>
           ) : (
             <>
               <Typography variant="h5" onClick={open} color="text.secondary">
                 Drop your clip(s), or <b>browse</b>
               </Typography>
-              <Typography color="text.secondary">
-                Supported: MP4. Max file size 100MB
-              </Typography>
+              <Typography color="text.secondary">Supported: MP4. Max file size 100MB</Typography>
             </>
           )}
 
-          {error && (
-            <Alert severity="error">Upgrade to get more space now!</Alert>
-          )}
+          {error && <Alert severity="error">Upgrade to get more space now!</Alert>}
 
           {!!fileRows.length && (
             <Grid item container xs={12} pt={2}>

@@ -4,8 +4,8 @@ import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
 import { getProfile } from "~/api/profile.service";
-import { Layout } from "~/components/organisms/layout.component";
-import type { Profile } from "~/models/profile.model";
+import { Layout } from "~/components/organisms/layout";
+import type { Profile } from "~/models";
 import { getToken } from "~/utils/session.server";
 
 type LoaderData = {
@@ -39,7 +39,7 @@ export const meta: MetaFunction = () => ({
   "twitter:card": "Privacy Policy",
 });
 
-export default function VideoId() {
+export default function Privacy() {
   const data = useLoaderData<LoaderData>();
 
   return (

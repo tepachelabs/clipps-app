@@ -1,8 +1,9 @@
 import type { AxiosRequestConfig } from "axios";
 import type { AxiosError } from "axios";
 
-import { api } from "~/api/http.service";
-import type { Video } from "~/models/video.model";
+import type { Video } from "~/models";
+
+import { api } from "./http.service";
 
 interface ApiVideo {
   asset_id: string;
@@ -28,8 +29,7 @@ const castDataToVideo = (data: ApiVideo): Video => {
   } as Video;
 };
 
-const parseVideoEntity = (arg: unknown): Video =>
-  castDataToVideo(arg as ApiVideo);
+const parseVideoEntity = (arg: unknown): Video => castDataToVideo(arg as ApiVideo);
 
 const parseVideoEntities = (arg: unknown[]): Video[] =>
   arg.map((chunk: unknown) => castDataToVideo(chunk as ApiVideo));
@@ -59,7 +59,7 @@ export const fetchVideo = async (assetId: Video["assetId"]) =>
 export const uploadVideo = (
   token: string,
   selectedFile: Blob,
-  config?: Partial<AxiosRequestConfig>
+  config?: Partial<AxiosRequestConfig>,
 ) => {
   const formData = new FormData();
   formData.append("video", selectedFile);
@@ -84,7 +84,7 @@ export const update = async (
   token: string,
   assetId: string,
   title: string,
-  deletedAt?: Date | null
+  deletedAt?: Date | null,
 ): Promise<Video | null> =>
   api
     .patch<ApiVideo>(
@@ -94,7 +94,7 @@ export const update = async (
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     )
     .then(({ data }) => parseVideoEntity(data))
     .catch((error: AxiosError) => {

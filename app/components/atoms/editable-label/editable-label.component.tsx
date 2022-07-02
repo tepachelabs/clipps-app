@@ -1,17 +1,13 @@
 import { Button, Stack, TextField, Typography } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
-interface EditableLabel {
+interface EditableLabelProps {
   isDisabled?: boolean;
   onCommit?: (editedValue: string) => void;
   value: string;
 }
 
-export const EditableLabel: React.FC<EditableLabel> = ({
-  isDisabled,
-  onCommit,
-  value,
-}: EditableLabel) => {
+export const EditableLabel: React.FC<EditableLabelProps> = ({ isDisabled, onCommit, value }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [editedValue, setEditedValue] = useState<string>(value);
   const [isEditing, setIsEditing] = useState<boolean>();

@@ -1,9 +1,5 @@
 import { Grid } from "@mui/material";
-import type {
-  ActionFunction,
-  LoaderFunction,
-  MetaFunction,
-} from "@remix-run/node";
+import type { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import React from "react";
@@ -12,12 +8,11 @@ import { getProfile } from "~/api/profile.service";
 import { deleteByAssetId, fetchVideos } from "~/api/videos.service";
 import type { VideoCardProps } from "~/components/atoms/video-card";
 import { VideoCard } from "~/components/atoms/video-card";
-import { VideoList } from "~/components/atoms/video-list";
-import { VideoUpload } from "~/components/atoms/video-upload";
-import { Layout } from "~/components/organisms/layout.component";
+import { VideoList } from "~/components/molecules/video-list";
+import { Layout } from "~/components/organisms/layout";
+import { VideoUpload } from "~/components/organisms/video-upload";
 import { ACTION } from "~/constants";
-import type { Profile } from "~/models/profile.model";
-import type { Video } from "~/models/video.model";
+import type { Profile, Video } from "~/models";
 import { requireToken } from "~/utils/session.server";
 
 type LoaderData = {
@@ -28,10 +23,7 @@ type LoaderData = {
 
 export const loader: LoaderFunction = async ({ request }) => {
   const token = await requireToken(request);
-  const [videos, profile] = await Promise.all([
-    fetchVideos(token),
-    getProfile(token),
-  ]);
+  const [videos, profile] = await Promise.all([fetchVideos(token), getProfile(token)]);
 
   const data: LoaderData = {
     profile,
@@ -48,9 +40,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   switch (form.get("action")) {
     case ACTION.DELETE:
-      await Promise.all(
-        videoIds.map((assetId) => deleteByAssetId(token, assetId))
-      );
+      await Promise.all(videoIds.map((assetId) => deleteByAssetId(token, assetId)));
       return null;
     default:
       throw new Error("Unknown action");
@@ -74,7 +64,7 @@ export const meta: MetaFunction = () => ({
   // "twitter:card": data.video.posterUrl,
 });
 
-export default function Index() {
+export default function Dashboard() {
   const loaderData = useLoaderData<LoaderData>();
   const fetcher = useFetcher<LoaderData>();
 
@@ -88,7 +78,7 @@ export default function Index() {
     const videoIds = videos.map(({ assetId }) => assetId);
     fetcher.submit(
       { action: ACTION.DELETE, videos: JSON.stringify(videoIds) },
-      { method: "delete" }
+      { method: "delete" },
     );
     return Promise.resolve();
   };
@@ -101,12 +91,7 @@ export default function Index() {
         </Grid>
         <Grid item xs={12}>
           <VideoList
-            ItemRenderer={({
-              video,
-              isChecked,
-              onCheck,
-              onDelete,
-            }: VideoCardProps) => (
+            ItemRenderer={({ video, isChecked, onCheck, onDelete }: VideoCardProps) => (
               <VideoCard
                 video={video}
                 isChecked={isChecked}

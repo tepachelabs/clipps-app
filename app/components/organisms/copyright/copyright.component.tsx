@@ -1,5 +1,4 @@
 import { Container, Link, Paper, Stack, Typography } from "@mui/material";
-import { grey } from "@mui/material/colors";
 import type { TypographyProps } from "@mui/material/Typography/Typography";
 import React from "react";
 
@@ -10,16 +9,12 @@ const styles = {
     height: "100%",
     paddingY: 2,
     width: "100%",
-    // backgroundColor: "white",
-    // color: grey[800],
     borderRadius: 0,
     borderWidth: "1px 0 0 0",
   },
 };
 
-export const Copyright: React.FC<TypographyProps> = (
-  props: TypographyProps
-) => (
+export const Copyright: React.FC<TypographyProps> = (props) => (
   <Paper variant="outlined" sx={styles.paper}>
     <Container maxWidth="lg">
       <Stack direction="row" justifyContent="space-between">

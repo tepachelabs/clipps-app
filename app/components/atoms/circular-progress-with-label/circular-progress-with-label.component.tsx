@@ -1,5 +1,6 @@
+import type { CircularProgressProps } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import React from "react";
-import { Box, CircularProgress, CircularProgressProps, Typography } from "@mui/material";
 
 interface CircularProgressWithLabelProps {
   value: number;

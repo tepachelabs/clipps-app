@@ -1,5 +1,6 @@
+import type { ButtonProps } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import React from "react";
-import { Button, ButtonProps, CircularProgress } from "@mui/material";
 
 interface LoadingButtonProps {
   isLoading?: boolean;

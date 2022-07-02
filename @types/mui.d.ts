@@ -25,3 +25,9 @@ declare module "@mui/material/Paper" {
     secondary: true;
   }
 }
+
+declare module "@mui/material/Paper" {
+  interface PaperPropsVariantOverrides {
+    muted: true;
+  }
+}

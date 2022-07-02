@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
 
 interface ClickToCopyButtonProps {
   label: string;

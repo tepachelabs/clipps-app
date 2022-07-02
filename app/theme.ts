@@ -52,6 +52,16 @@ const theme = createTheme({
         },
       ],
     },
+    MuiCard: {
+      variants: [
+        {
+          props: { variant: "muted" },
+          style: {
+            backgroundColor: grey[50],
+          },
+        },
+      ],
+    },
   },
 });
 

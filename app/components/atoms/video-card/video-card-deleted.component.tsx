@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Button,
   Card,
@@ -10,8 +9,9 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import React from "react";
 
-import { Video } from "../../../models";
+import type { Video } from "~/models";
 
 export interface VideoCardDeletedProps {
   isChecked: boolean;

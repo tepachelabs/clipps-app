@@ -11,6 +11,7 @@ export const PATHS = {
   DASHBOARD: "/dashboard",
   VIDEO: "/video",
   PRIVACY: "/privacy",
-  TERMS: "/terms-of-service",
+  TERMS: "/terms",
   MAILTO: "mailto:support@clipps.io",
+  getVideoPath: (assetId: string) => `/w/${assetId}`,
 };

@@ -1,20 +1,21 @@
-import { renderToString } from "react-dom/server";
+import { CacheProvider } from "@emotion/react";
+import createEmotionServer from "@emotion/server/create-instance";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import type { EntryContext } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
-import createEmotionServer from "@emotion/server/create-instance";
-import { CacheProvider } from "@emotion/react";
-import { CssBaseline, ThemeProvider } from "@mui/material";
+import { renderToString } from "react-dom/server";
 
-import createEmotionCache from "~/createEmotionCache";
 import theme from "~/theme";
+import createEmotionCache from "~/utils/createEmotionCache";
 
 export default function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
-  remixContext: EntryContext
+  remixContext: EntryContext,
 ) {
   const cache = createEmotionCache();
+  // eslint-disable-next-line @typescript-eslint/unbound-method
   const { extractCriticalToChunks } = createEmotionServer(cache);
 
   const MuiRemixServer = () => (
