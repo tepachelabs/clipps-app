@@ -9,10 +9,8 @@ export const PATHS = {
   LOGIN: "/login",
   REGISTER: "/register",
   DASHBOARD: "/dashboard",
-  VIDEO: "/video",
   PRIVACY: "/privacy",
   TERMS: "/terms",
   MAILTO: "mailto:support@clipps.io",
-  getVideoPublicLink: (assetId: string) => `/w/${assetId}`,
-  getVideoEditPath: (assetId: string) => `/video/${assetId}`,
+  getVideoEditPath: (assetId: string) => `/clipp/${assetId}`,
 };

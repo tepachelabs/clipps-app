@@ -7,7 +7,7 @@ const theme = createTheme({
       default: grey[50],
     },
     primary: {
-      main: deepPurple["A200"],
+      main: "#53428f",
     },
     secondary: {
       main: deepPurple[50],
@@ -58,6 +58,16 @@ const theme = createTheme({
           props: { variant: "muted" },
           style: {
             backgroundColor: grey[50],
+          },
+        },
+      ],
+    },
+    MuiChip: {
+      variants: [
+        {
+          props: { variant: "muted" },
+          style: {
+            backgroundColor: grey[300],
           },
         },
       ],

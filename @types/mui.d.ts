@@ -31,3 +31,9 @@ declare module "@mui/material/Paper" {
     muted: true;
   }
 }
+
+declare module "@mui/material/Chip" {
+  interface ChipPropsVariantOverrides {
+    muted: true;
+  }
+}

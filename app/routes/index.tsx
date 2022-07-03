@@ -46,7 +46,7 @@ export default function Index() {
 
   return (
     <Layout profile={data.profile}>
-      <LandingPage />
+      <LandingPage isAnonymous={!data.profile} />
     </Layout>
   );
 }

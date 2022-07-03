@@ -7,4 +7,5 @@ export type Video = {
   bytes: number;
   createdAt: string;
   deletedAt: string;
+  isPrivate: boolean;
 };

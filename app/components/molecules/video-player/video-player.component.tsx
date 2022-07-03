@@ -6,10 +6,11 @@ import { Link } from "react-router-dom";
 import { ClickToCopyButton } from "~/components/atoms/click-to-copy-button";
 import { PATHS } from "~/constants";
 import type { Video } from "~/models";
-import { generatePublicUrl } from "~/utils/generate-public-url";
+import { generatePublicLink } from "~/utils/generate-public-link";
 
 interface VideoPlayerProps {
   video: Video;
+  showEditButton?: boolean;
   onTitleUpdate?: (editedValue: string) => void;
 }
 
@@ -23,7 +24,7 @@ const styles = {
   },
 };
 
-export const VideoPlayer = ({ video }: VideoPlayerProps) => {
+export const VideoPlayer = ({ showEditButton, video }: VideoPlayerProps) => {
   const date = useMemo(() => new Date(video.createdAt), [video.createdAt]);
 
   return (
@@ -32,27 +33,38 @@ export const VideoPlayer = ({ video }: VideoPlayerProps) => {
         component="video"
         src={video.secureUrl}
         controls
+        autoPlay={false}
         controlsList="nodownload"
         sx={styles.video}
       />
       <CardContent>
-        <Stack direction="row" spacing={2} justifyContent="space-between">
-          <Typography variant="h5">{video.title}</Typography>
-          <Stack direction="row" spacing={2}>
-            <Button component={Link} to={PATHS.getVideoEditPath(video.assetId)} variant="outlined">
-              Edit
-            </Button>
+        <Stack
+          direction={{ xs: "column", md: "row" }}
+          spacing={{ xs: 2, md: 1 }}
+          justifyContent="space-between"
+        >
+          <Stack direction="column" spacing={1}>
+            <Typography variant="h5">{video.title}</Typography>
+            <Typography color="text.secondary" fontSize="small">
+              Uploaded {formatDistance(date, new Date(), { addSuffix: true })}
+            </Typography>
+          </Stack>
+          <Stack direction="row" spacing={2} alignItems="flex-start">
+            {showEditButton && (
+              <Button
+                component={Link}
+                to={PATHS.getVideoEditPath(video.assetId)}
+                variant="contained"
+              >
+                Edit
+              </Button>
+            )}
             <ClickToCopyButton
               label="Share"
-              value={generatePublicUrl(video.assetId)}
-              variant="outlined"
+              value={generatePublicLink(video.assetId)}
+              variant="contained"
             />
           </Stack>
-        </Stack>
-        <Stack direction="row" spacing={2}>
-          <Typography variant="body2" color="text.secondary">
-            Uploaded {formatDistance(date, new Date(), { addSuffix: true })}
-          </Typography>
         </Stack>
       </CardContent>
     </Card>

@@ -3,11 +3,11 @@ import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
 import { getProfile } from "~/api/profile.service";
-import { fetchVideo } from "~/api/videos.service";
+import { fetchVideoAnonymously } from "~/api/videos.service";
 import { VideoNotFoundPage } from "~/components/pages/video-not-found.component";
 import { WatchPage } from "~/components/pages/watch.component";
 import type { Profile, Video } from "~/models";
-import { generatePublicUrl } from "~/utils/generate-public-url";
+import { generatePublicLink } from "~/utils/generate-public-link";
 import { getToken } from "~/utils/session.server";
 
 type LoaderData = {
@@ -24,9 +24,12 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   let video;
 
   if (token) {
-    [video, profile] = await Promise.all([fetchVideo(params.videoId), getProfile(token)]);
+    [video, profile] = await Promise.all([
+      fetchVideoAnonymously(params.videoId),
+      getProfile(token),
+    ]);
   } else {
-    video = await fetchVideo(params.videoId);
+    video = await fetchVideoAnonymously(params.videoId);
   }
 
   const data: LoaderData = {
@@ -59,7 +62,7 @@ export const meta: MetaFunction = ({ data }: { data?: LoaderData }) => {
     description: `Watch now "${data.video.title}". Share your Clipps, without the hassle.`,
     "og:title": data.video.title,
     "og:type": "video.movie",
-    "og:url": generatePublicUrl(data.video.assetId),
+    "og:url": generatePublicLink(data.video.assetId),
     "og:image": data.video.posterUrl,
     "og:image:width": "1280",
     "og:image:height": "720",

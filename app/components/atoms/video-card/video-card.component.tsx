@@ -1,3 +1,4 @@
+import { VisibilityOff } from "@mui/icons-material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
   Button,
@@ -7,6 +8,7 @@ import {
   CardContent,
   CardMedia,
   Checkbox,
+  Chip,
   Grid,
   IconButton,
   Tooltip,
@@ -20,7 +22,7 @@ import { ClickToCopyButton } from "~/components/atoms/click-to-copy-button";
 import { ContextualMenu } from "~/components/atoms/contextual-menu";
 import { PATHS } from "~/constants";
 import type { Video } from "~/models";
-import { generatePublicUrl } from "~/utils/generate-public-url";
+import { generatePublicLink } from "~/utils/generate-public-link";
 
 export interface VideoCardProps {
   isChecked: boolean;
@@ -47,6 +49,12 @@ const styles = {
     position: "absolute",
     zIndex: 99,
     right: 0,
+  },
+  chip: {
+    position: "absolute",
+    zIndex: 99,
+    left: 5,
+    bottom: "50%",
   },
 };
 
@@ -78,6 +86,15 @@ export const VideoCard: React.FC<VideoCardProps> = ({
   return (
     <Grid item xs={12} sm={4} md={3}>
       <Card variant="outlined" sx={styles.card}>
+        {video.isPrivate && (
+          <Chip
+            size="small"
+            icon={<VisibilityOff />}
+            label="Private"
+            variant="muted"
+            sx={styles.chip}
+          />
+        )}
         <Checkbox
           checked={isChecked}
           onChange={({ target }) => onCheck?.({ checked: target.checked, video })}
@@ -90,7 +107,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({
             </IconButton>
           )}
         </ContextualMenu>
-        <CardActionArea component={Link} to={PATHS.getVideoPublicLink(video.assetId)}>
+        <CardActionArea component={Link} to={PATHS.getVideoEditPath(video.assetId)}>
           <CardMedia component="img" width="100%" image={video.posterUrl} alt={video.title} />
           <CardContent>
             <Tooltip title={video.title}>
@@ -101,7 +118,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <ClickToCopyButton label="Share" value={generatePublicUrl(video.assetId)} />
+          <ClickToCopyButton label="Share" value={generatePublicLink(video.assetId)} />
           <Button component={Link} to={PATHS.getVideoEditPath(video.assetId)}>
             Edit
           </Button>

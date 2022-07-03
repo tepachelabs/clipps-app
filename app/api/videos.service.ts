@@ -14,6 +14,7 @@ interface ApiVideo {
   secure_url: string;
   poster_url: string;
   title: string;
+  is_private: boolean;
 }
 
 const castDataToVideo = (data: ApiVideo): Video => {
@@ -26,6 +27,7 @@ const castDataToVideo = (data: ApiVideo): Video => {
     bytes: data.bytes,
     createdAt: data.created_at,
     deletedAt: data.deleted_at,
+    isPrivate: data.is_private,
   } as Video;
 };
 
@@ -47,7 +49,20 @@ export const fetchVideos = async (token: string) =>
       return [];
     });
 
-export const fetchVideo = async (assetId: Video["assetId"]) =>
+export const fetchVideo = async (assetId: Video["assetId"], token: string) =>
+  api
+    .get<ApiVideo>(`/videos/${assetId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(({ data }) => parseVideoEntity(data))
+    .catch((error: AxiosError) => {
+      console.error(error);
+      return null;
+    });
+
+export const fetchVideoAnonymously = async (assetId: Video["assetId"]) =>
   api
     .get<ApiVideo>(`/video/${assetId}`)
     .then(({ data }) => parseVideoEntity(data))
@@ -84,12 +99,13 @@ export const update = async (
   token: string,
   assetId: string,
   title: string,
+  isPrivate?: boolean,
   deletedAt?: Date | null,
 ): Promise<Video | null> =>
   api
     .patch<ApiVideo>(
       `/videos/${assetId}`,
-      { title, deletedAt },
+      { title, deletedAt, isPrivate },
       {
         headers: {
           Authorization: `Bearer ${token}`,

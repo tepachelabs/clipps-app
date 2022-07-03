@@ -1,4 +1,4 @@
-import { ArrowBack } from "@mui/icons-material";
+import { ArrowBack, VisibilityOff } from "@mui/icons-material";
 import {
   Breadcrumbs,
   Button,
@@ -17,17 +17,20 @@ import type { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/no
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useLoaderData } from "@remix-run/react";
 import type { AxiosError } from "axios";
-import React from "react";
+import React, { useMemo } from "react";
 
 import { getProfile } from "~/api/profile.service";
 import { fetchVideo, update } from "~/api/videos.service";
-import { ClickToCopyButton } from "~/components/atoms/click-to-copy-button";
 import { Layout } from "~/components/organisms/layout";
+import { WidgetMetadata } from "~/components/organisms/widget-metadata";
+import { WidgetPrivateContent } from "~/components/organisms/widget-private-content";
+import { WidgetPublicLink } from "~/components/organisms/widget-public-link";
+import { WidgetShare } from "~/components/organisms/widget-share";
 import { VideoNotFoundPage } from "~/components/pages/video-not-found.component";
 import { PATHS } from "~/constants";
 import type { Profile, Video } from "~/models";
-import { generatePublicUrl } from "~/utils/generate-public-url";
-import { getToken, requireToken } from "~/utils/session.server";
+import { generatePublicLink } from "~/utils/generate-public-link";
+import { requireToken } from "~/utils/session.server";
 
 interface LoaderData {
   profile: Profile | null;
@@ -38,15 +41,11 @@ interface LoaderData {
 export const loader: LoaderFunction = async ({ params, request }) => {
   if (!params.videoId) throw new Error("Video not found");
 
-  const token = await getToken(request);
-  let profile = null;
-  let video;
-
-  if (token) {
-    [video, profile] = await Promise.all([fetchVideo(params.videoId), getProfile(token)]);
-  } else {
-    video = await fetchVideo(params.videoId);
-  }
+  const token = await requireToken(request);
+  const [video, profile] = await Promise.all([
+    fetchVideo(params.videoId, token),
+    getProfile(token),
+  ]);
 
   const data: LoaderData = { profile, video, token };
   return json(data);
@@ -59,9 +58,10 @@ export const action: ActionFunction = async ({ params, request }) => {
   const token = await requireToken(request);
   const assetId = params.videoId;
   const title = form.get("title") as string;
+  const isPrivate = form.get("isPrivate") as unknown as boolean;
 
   try {
-    await update(token, assetId, title);
+    await update(token, assetId, title, isPrivate);
     return redirect(PATHS.DASHBOARD);
   } catch (err) {
     const error = err as AxiosError;
@@ -93,8 +93,16 @@ export const meta: MetaFunction = ({ data }: { data?: LoaderData }) => {
   };
 };
 
+const styles = {
+  video: { width: "100%" },
+};
+
 export default function EditVideoId() {
   const data = useLoaderData<LoaderData>();
+  const publicLink = useMemo(
+    () => generatePublicLink(data.video?.assetId || ""),
+    [data.video?.assetId],
+  );
 
   if (!data.video) {
     return <VideoNotFoundPage profile={data.profile} />;
@@ -111,63 +119,51 @@ export default function EditVideoId() {
             <MuiLink color="inherit" component={Link} to="/dashboard">
               Dashboard
             </MuiLink>
+            <Typography>Edit clipp</Typography>
           </Breadcrumbs>
-        </Grid>
-        <Grid item md={6}>
-          <Paper variant="outlined">
-            <Stack spacing={2} p={2} component={Form} method="post">
-              <Typography variant="h6">Your clipp</Typography>
-              <img src={data.video.posterUrl} alt={data.video.title} />
-              <TextField
-                label="You clipp's title"
-                variant="outlined"
-                size="small"
-                name="title"
-                defaultValue={data.video.title}
-              />
-              <FormGroup>
-                <FormControlLabel disabled control={<Switch />} label="Clipp is private" />
-              </FormGroup>
-              <Button variant="contained" type="submit">
-                Save changes
-              </Button>
-            </Stack>
-          </Paper>
         </Grid>
         <Grid item md={6}>
           <Stack spacing={3}>
             <Paper variant="outlined">
-              <Stack spacing={2} p={2}>
-                <Typography variant="h6">Your public link</Typography>
-                <Typography>
-                  Use this link to share your video. Anyone with this link can watch it, unless you
-                  mark your clipp as private.
-                </Typography>
-                <Stack direction="row" spacing={1}>
-                  <TextField
-                    label="Public link"
-                    variant="outlined"
-                    size="small"
-                    defaultValue={generatePublicUrl(data.video.assetId)}
-                    fullWidth
-                    disabled
+              <Stack spacing={2} p={2} component={Form} method="post">
+                <Typography variant="h6">Your clipp</Typography>
+                <video src={data.video.secureUrl} controls style={styles.video}>
+                  <img src={data.video.posterUrl} alt={data.video.title} />
+                </video>
+                <TextField
+                  label="You clipp's title"
+                  variant="outlined"
+                  size="small"
+                  name="title"
+                  defaultValue={data.video.title}
+                />
+                <FormGroup>
+                  <FormControlLabel
+                    control={<Switch name="isPrivate" defaultChecked={data.video.isPrivate} />}
+                    label={
+                      <Stack direction="row" spacing={1} alignItems="center">
+                        <Typography>Clipp is private</Typography>
+                        <VisibilityOff fontSize="small" />
+                      </Stack>
+                    }
                   />
-                  <ClickToCopyButton
-                    label="Copy"
-                    value={generatePublicUrl(data.video.assetId)}
-                    variant="contained"
-                  />
-                </Stack>
+                </FormGroup>
+                <Button variant="contained" type="submit">
+                  Save changes
+                </Button>
               </Stack>
             </Paper>
-            <Paper variant="outlined">
-              <Stack spacing={2} p={2}>
-                <Typography variant="h6">Privacy settings</Typography>
-                <Typography>
-                  When your clipp is <b>private</b>, only you can watch it.
-                </Typography>
-              </Stack>
-            </Paper>
+            {!data.video.isPrivate && <WidgetShare message={data.video.title} url={publicLink} />}
+          </Stack>
+        </Grid>
+        <Grid item md={6}>
+          <Stack spacing={3}>
+            {data.video.isPrivate ? (
+              <WidgetPrivateContent />
+            ) : (
+              <WidgetPublicLink url={publicLink} />
+            )}
+            <WidgetMetadata video={data.video} />
           </Stack>
         </Grid>
       </Grid>

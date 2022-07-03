@@ -11,10 +11,15 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import React from "react";
 import { Link } from "react-router-dom";
 
 import { desktopIcon, emailIcon, multiIcon, switchIcon, tvIcon } from "~/components/atoms/icon";
 import { PATHS } from "~/constants";
+
+interface LandingPageProps {
+  isAnonymous: boolean;
+}
 
 const FOUR = 4;
 const faq = [
@@ -66,7 +71,7 @@ const styles = {
   paper: { marginTop: "5em", padding: "2em", width: "100%" },
 };
 
-export const LandingPage = () => (
+export const LandingPage: React.FC<LandingPageProps> = ({ isAnonymous }) => (
   <>
     <Grid container spacing={FOUR} sx={styles.hero}>
       <Grid item>
@@ -81,7 +86,15 @@ export const LandingPage = () => (
           <br />
           Join the community for free now!
         </Typography>
-        <Button variant="contained">Join now</Button>
+        {isAnonymous ? (
+          <Button variant="contained" size="large" component={MuiLink} href="#request-invite">
+            Join now
+          </Button>
+        ) : (
+          <Button variant="contained" size="large" component={Link} to={PATHS.DASHBOARD}>
+            Share clipps
+          </Button>
+        )}
       </Grid>
       <Grid item>
         <img src={desktopIcon} alt="desktop playing a clipp" width={400} />
@@ -119,36 +132,38 @@ export const LandingPage = () => (
       </Grid>
     </Grid>
 
-    <Grid container spacing={FOUR} sx={styles.section} justifyContent="center">
-      <Grid item xs={12}>
-        <Typography variant="h4">Request an invite</Typography>
-        <Typography>Early access is by invitation only. Request your invite today!</Typography>
+    {isAnonymous && (
+      <Grid container spacing={FOUR} sx={styles.section} justifyContent="center">
+        <Grid item xs={12}>
+          <Typography variant="h4">Request an invite</Typography>
+          <Typography>Early access is by invitation only. Request your invite today!</Typography>
+        </Grid>
+        <Grid item xs={12} md={7}>
+          <Stack direction="row" spacing={4} alignItems="center">
+            <Paper variant="outlined" sx={styles.paper}>
+              <Stack direction="row" spacing={1} alignItems="center">
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                />
+                <Button variant="contained">Request</Button>
+              </Stack>
+            </Paper>
+            <img src={emailIcon} alt="request and invite graphic" width={200} />
+          </Stack>
+          <Typography pt={2}>
+            Privacy concerns? Check our{" "}
+            <MuiLink underline="hover" component={Link} to={PATHS.PRIVACY}>
+              privacy policy
+            </MuiLink>
+          </Typography>
+        </Grid>
       </Grid>
-      <Grid item xs={12} md={7}>
-        <Stack direction="row" spacing={4} alignItems="center">
-          <Paper variant="outlined" sx={styles.paper}>
-            <Stack direction="row" spacing={1} alignItems="center">
-              <TextField
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-              />
-              <Button variant="contained">Request</Button>
-            </Stack>
-          </Paper>
-          <img src={emailIcon} alt="request and invite graphic" width={200} />
-        </Stack>
-        <Typography pt={2}>
-          Privacy concerns? Check our{" "}
-          <MuiLink underline="hover" component={Link} to={PATHS.PRIVACY}>
-            privacy policy
-          </MuiLink>
-        </Typography>
-      </Grid>
-    </Grid>
+    )}
 
     <Grid container spacing={FOUR} sx={styles.section} justifyContent="center">
       <Grid item xs={12}>
@@ -168,7 +183,7 @@ export const LandingPage = () => (
         ))}
         <Typography pt={3}>
           Additional questions? Drop us an email at{" "}
-          <MuiLink underline="hover" component={Link} to="" href={PATHS.MAILTO}>
+          <MuiLink underline="hover" href={PATHS.MAILTO}>
             support@clipps.io
           </MuiLink>
           , our support team will reach out!
