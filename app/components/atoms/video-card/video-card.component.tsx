@@ -1,4 +1,4 @@
-import { VisibilityOff } from "@mui/icons-material";
+import { Pending, VisibilityOff } from "@mui/icons-material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
   Button,
@@ -56,6 +56,12 @@ const styles = {
     left: 5,
     bottom: "50%",
   },
+  thumb: {
+    height: 150,
+  },
+  thumbMuted: {
+    filter: "grayscale(90%)",
+  },
 };
 
 export const VideoCard: React.FC<VideoCardProps> = ({
@@ -95,6 +101,15 @@ export const VideoCard: React.FC<VideoCardProps> = ({
             sx={styles.chip}
           />
         )}
+        {!video.secureUrl && (
+          <Chip
+            size="small"
+            icon={<Pending />}
+            label="Processing..."
+            variant="muted"
+            sx={styles.chip}
+          />
+        )}
         <Checkbox
           checked={isChecked}
           onChange={({ target }) => onCheck?.({ checked: target.checked, video })}
@@ -108,7 +123,13 @@ export const VideoCard: React.FC<VideoCardProps> = ({
           )}
         </ContextualMenu>
         <CardActionArea component={Link} to={PATHS.getVideoEditPath(video.assetId)}>
-          <CardMedia component="img" width="100%" image={video.posterUrl} alt={video.title} />
+          <CardMedia
+            component="img"
+            width="100%"
+            image={video.posterUrl}
+            alt={video.title}
+            sx={[styles.thumb, video.secureUrl ? null : styles.thumbMuted]}
+          />
           <CardContent>
             <Tooltip title={video.title}>
               <Typography gutterBottom={false} noWrap>

@@ -7,6 +7,7 @@ export const ACTION = {
 export const PATHS = {
   HOME: "/",
   LOGIN: "/login",
+  LOGOUT: "/logout",
   REGISTER: "/register",
   DASHBOARD: "/dashboard",
   PRIVACY: "/privacy",

@@ -51,10 +51,10 @@ export const Header = () => (
   <BaseHeader>
     <Stack direction="row" spacing={2}>
       <Button component={Link} color="inherit" to={PATHS.LOGIN}>
-        Login
+        Log in
       </Button>
-      <Button component={Link} color="inherit" to={PATHS.REGISTER}>
-        Register
+      <Button variant="outlined" component={Link} to={PATHS.REGISTER}>
+        Join for free
       </Button>
     </Stack>
   </BaseHeader>
@@ -69,7 +69,7 @@ export const HeaderWithProfile = ({ profile }: { profile: Profile }) => (
       {/*<MuiLink color="inherit" underline="hover" component={Link} to="/">*/}
       {/*  Settings*/}
       {/*</MuiLink>*/}
-      <form action="/app/routes/logout" method="post">
+      <form action={PATHS.LOGOUT} method="post">
         <MuiLink
           component={Button}
           variant="body1"

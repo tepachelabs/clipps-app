@@ -22,6 +22,11 @@ const styles = {
     backgroundColor: "#222",
     maxHeight: 600,
   },
+  thumb: {
+    backgroundColor: "#222",
+    maxHeight: 600,
+    filter: "grayscale(90%) blur(2px)",
+  },
 };
 
 export const VideoPlayer = ({ showEditButton, video }: VideoPlayerProps) => {
@@ -29,14 +34,18 @@ export const VideoPlayer = ({ showEditButton, video }: VideoPlayerProps) => {
 
   return (
     <Card variant="outlined" sx={styles.card}>
-      <CardMedia
-        component="video"
-        src={video.secureUrl}
-        controls
-        autoPlay={false}
-        controlsList="nodownload"
-        sx={styles.video}
-      />
+      {video.secureUrl ? (
+        <CardMedia
+          component="video"
+          src={video.secureUrl}
+          controls
+          autoPlay
+          controlsList="nodownload"
+          sx={styles.video}
+        />
+      ) : (
+        <CardMedia component="img" src={video.posterUrl} alt={video.title} sx={styles.thumb} />
+      )}
       <CardContent>
         <Stack
           direction={{ xs: "column", md: "row" }}

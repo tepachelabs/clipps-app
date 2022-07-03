@@ -1,5 +1,13 @@
 import { ArrowBack } from "@mui/icons-material";
-import { Breadcrumbs, Grid, IconButton, Link as MuiLink, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Breadcrumbs,
+  Grid,
+  IconButton,
+  Link as MuiLink,
+  Typography,
+} from "@mui/material";
 import { Link } from "@remix-run/react";
 import React, { useMemo } from "react";
 
@@ -33,6 +41,13 @@ export const WatchPage: React.FC<WatchPageProps> = ({ profile, video }) => {
           </Grid>
         )}
         <Grid item xs={12} md={9}>
+          {!video.secureUrl && (
+            <Box mb={2}>
+              <Alert severity="info">
+                Your clipp is being optimized. This might take a few minutes depending its size.
+              </Alert>
+            </Box>
+          )}
           <VideoPlayer video={video} showEditButton={hasProfile} />
           {!hasProfile && (
             <Typography align="right">

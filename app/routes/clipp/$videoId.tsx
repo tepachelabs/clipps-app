@@ -1,5 +1,6 @@
 import { ArrowBack, VisibilityOff } from "@mui/icons-material";
 import {
+  Alert,
   Breadcrumbs,
   Button,
   FormControlLabel,
@@ -127,9 +128,19 @@ export default function EditVideoId() {
             <Paper variant="outlined">
               <Stack spacing={2} p={2} component={Form} method="post">
                 <Typography variant="h6">Your clipp</Typography>
-                <video src={data.video.secureUrl} controls style={styles.video}>
-                  <img src={data.video.posterUrl} alt={data.video.title} />
-                </video>
+                {data.video.secureUrl ? (
+                  <video src={data.video.secureUrl} controls style={styles.video}>
+                    <img src={data.video.posterUrl} alt={data.video.title} />
+                  </video>
+                ) : (
+                  <>
+                    <Alert severity="info">
+                      Your clipp is being optimized. This might take a few minutes depending its
+                      size.
+                    </Alert>
+                    <img src={data.video.posterUrl} alt={data.video.title} style={styles.video} />
+                  </>
+                )}
                 <TextField
                   label="You clipp's title"
                   variant="outlined"

@@ -60,6 +60,11 @@ const faq = [
     answer:
       "If you suspect that any content on Clipps is infringing upon a copyright that you own, please reach out to us at support@clipps.io.",
   },
+  {
+    question: "After upload, my clipp says 'processing...' and does not load.",
+    answer:
+      "We optimize clipps to deliver the best experience possible as soon as you upload them. This allow us to deliver optimized clipps faster in the future. Please trust the process. If you believe the clipp is stuck, contact support 🙌🏼",
+  },
 ];
 const styles = {
   hero: {
@@ -149,8 +154,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({ isAnonymous }) => (
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  size="small"
                 />
-                <Button variant="contained">Request</Button>
+                <Button variant="contained" size="large">
+                  Request
+                </Button>
               </Stack>
             </Paper>
             <img src={emailIcon} alt="request and invite graphic" width={200} />
