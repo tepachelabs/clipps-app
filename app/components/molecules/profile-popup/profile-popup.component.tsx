@@ -1,15 +1,8 @@
-import {
-  Avatar,
-  ButtonBase,
-  ClickAwayListener,
-  Paper,
-  Popper,
-  Stack,
-  Typography,
-} from "@mui/material";
-import React, { useRef } from "react";
+import { Avatar, ButtonBase, Paper, Stack, Typography } from "@mui/material";
+import React from "react";
 
 import { CircularProgressWithLabel } from "~/components/atoms/circular-progress-with-label";
+import { Popup } from "~/components/atoms/popup";
 import type { Profile } from "~/models";
 
 interface ProfilePopupProps {
@@ -19,58 +12,43 @@ interface ProfilePopupProps {
 const QUOTA_LIMIT_PER_ACCOUNT = 9800000;
 
 const styles = {
-  popper: { zIndex: 1101 },
   avatar: { width: 24, height: 24 },
 };
 
 export const ProfilePopup: React.FC<ProfilePopupProps> = ({ profile }) => {
-  const cardRef = useRef<HTMLButtonElement>(null);
-  const [anchorEl, setAnchorEl] = React.useState<null | EventTarget>(null);
-
-  const togglePopper = () => {
-    setAnchorEl(anchorEl ? null : cardRef.current);
-  };
-
   const quotaInMb = Math.floor((profile.bytesUsed || 1) / 1000000);
   const progress = (profile.bytesUsed || 1) / QUOTA_LIMIT_PER_ACCOUNT;
 
   return (
-    <Stack direction="row" spacing={2} alignItems="center">
-      <ButtonBase ref={cardRef} onClick={togglePopper}>
-        <Paper variant="outlined">
-          <Stack direction="row" spacing={1} py={1} px={2}>
-            <Typography color="text.secondary" textAlign="right">
-              {profile.username}
-            </Typography>
-            <Avatar alt={profile.username} src={profile.avatar} sx={styles.avatar}>
-              {profile.username?.[0]}
-            </Avatar>
-          </Stack>
-        </Paper>
-      </ButtonBase>
-      <Popper
-        id="profile-popper"
-        open={!!anchorEl}
-        anchorEl={anchorEl as HTMLElement}
-        style={styles.popper}
-        placement="bottom-end"
-      >
-        <ClickAwayListener onClickAway={() => togglePopper()}>
+    <Popup
+      trigger={(togglePopup) => (
+        <ButtonBase onClick={togglePopup}>
           <Paper variant="outlined">
-            <Stack direction="column" justifyContent="center" alignItems="center" spacing={2} p={3}>
-              <CircularProgressWithLabel value={progress} size={72} />
-              <Stack direction="column" justifyContent="center" alignItems="center">
-                <Typography variant="caption" color="text.secondary" textAlign="right">
-                  Your space:
-                </Typography>
-                <Typography variant="caption" color="text.secondary" textAlign="right">
-                  Used {quotaInMb}/1000 MB
-                </Typography>
-              </Stack>
+            <Stack direction="row" spacing={1} py={1} px={2}>
+              <Typography color="text.secondary" textAlign="right">
+                {profile.username}
+              </Typography>
+              <Avatar alt={profile.username} src={profile.avatar} sx={styles.avatar}>
+                {profile.username?.[0]}
+              </Avatar>
             </Stack>
           </Paper>
-        </ClickAwayListener>
-      </Popper>
-    </Stack>
+        </ButtonBase>
+      )}
+    >
+      <Paper variant="outlined">
+        <Stack direction="column" justifyContent="center" alignItems="center" spacing={2} p={3}>
+          <CircularProgressWithLabel value={progress} size={72} />
+          <Stack direction="column" justifyContent="center" alignItems="center">
+            <Typography variant="caption" color="text.secondary" textAlign="right">
+              Your space:
+            </Typography>
+            <Typography variant="caption" color="text.secondary" textAlign="right">
+              Used {quotaInMb}/1000 MB
+            </Typography>
+          </Stack>
+        </Stack>
+      </Paper>
+    </Popup>
   );
 };

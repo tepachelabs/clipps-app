@@ -29,7 +29,7 @@ export const WatchPage: React.FC<WatchPageProps> = ({ profile, video }) => {
             </Breadcrumbs>
           </Grid>
         )}
-        <Grid item xs={9}>
+        <Grid item xs={12} md={9}>
           <VideoPlayer video={video} />
         </Grid>
       </Grid>

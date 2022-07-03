@@ -37,30 +37,6 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   return json(data);
 };
 
-// type ActionData = {
-//   video?: Video;
-//   error?: string;
-// };
-
-// export const action: ActionFunction = async ({ request }): ActionData => {
-//   const form = await request.formData();
-//   const token = await requireToken(request);
-//   const assetId = form.get("assetId") as string;
-//   const title = form.get("title") as string;
-//
-//   try {
-//     const video = await update(token, assetId, title);
-//     return { video };
-//   } catch (error) {
-//     const { message } = error as { message: string };
-//     if (message) {
-//       return { error: message };
-//     } else {
-//       return {};
-//     }
-//   }
-// };
-
 export const meta: MetaFunction = ({ data }: { data?: LoaderData }) => {
   if (!data || !data.video) {
     return {

@@ -13,5 +13,6 @@ export const PATHS = {
   PRIVACY: "/privacy",
   TERMS: "/terms",
   MAILTO: "mailto:support@clipps.io",
-  getVideoPath: (assetId: string) => `/w/${assetId}`,
+  getVideoPublicLink: (assetId: string) => `/w/${assetId}`,
+  getVideoEditPath: (assetId: string) => `/video/${assetId}`,
 };
