@@ -8,4 +8,5 @@ export type Video = {
   createdAt: string;
   deletedAt: string;
   isPrivate: boolean;
+  originalUrl: string;
 };

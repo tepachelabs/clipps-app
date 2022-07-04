@@ -15,6 +15,7 @@ interface ApiVideo {
   poster_url: string;
   title: string;
   is_private: boolean;
+  original_url: string;
 }
 
 const castDataToVideo = (data: ApiVideo): Video => {
@@ -28,6 +29,7 @@ const castDataToVideo = (data: ApiVideo): Video => {
     createdAt: data.created_at,
     deletedAt: data.deleted_at,
     isPrivate: data.is_private,
+    originalUrl: data.original_url,
   } as Video;
 };
 

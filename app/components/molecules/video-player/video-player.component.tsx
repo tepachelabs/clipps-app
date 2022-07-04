@@ -35,14 +35,10 @@ export const VideoPlayer = ({ showEditButton, video }: VideoPlayerProps) => {
   return (
     <Card variant="outlined" sx={styles.card}>
       {video.secureUrl ? (
-        <CardMedia
-          component="video"
-          src={video.secureUrl}
-          controls
-          autoPlay
-          controlsList="nodownload"
-          sx={styles.video}
-        />
+        <CardMedia component="video" controls autoPlay controlsList="nodownload" sx={styles.video}>
+          <source src={video.secureUrl} type="video/mp4" />
+          <source src={video.originalUrl} type="video/mp4" />
+        </CardMedia>
       ) : (
         <CardMedia component="img" src={video.posterUrl} alt={video.title} sx={styles.thumb} />
       )}
