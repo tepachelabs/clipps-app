@@ -129,8 +129,10 @@ export default function EditVideoId() {
               <Stack spacing={2} p={2} component={Form} method="post">
                 <Typography variant="h6">Your clipp</Typography>
                 {data.video.secureUrl ? (
-                  <video src={data.video.secureUrl} controls style={styles.video}>
+                  <video controls style={styles.video}>
                     <img src={data.video.posterUrl} alt={data.video.title} />
+                    <source src={data.video.secureUrl} type="video/mp4" />
+                    <source src={data.video.originalUrl} type="video/mp4" />
                   </video>
                 ) : (
                   <>
