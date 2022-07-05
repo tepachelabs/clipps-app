@@ -1,6 +1,6 @@
-FROM node:14-alpine as clipps-app
+FROM node:16-alpine as clipps-app
 LABEL maintainer="tonymtz <hello@tonymtz.com>"
-ARG REACT_APP_ENV=$REACT_APP_ENV
+ARG NODE_ENV=$NODE_ENV
 
 WORKDIR /app
 COPY . .
