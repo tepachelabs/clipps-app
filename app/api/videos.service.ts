@@ -51,6 +51,19 @@ export const fetchVideos = async (token: string) =>
       return [];
     });
 
+export const fetchDeletedVideos = async (token: string) =>
+  api
+    .get<ApiVideo[]>("/videos?deleted=true", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(({ data }) => parseVideoEntities(data))
+    .catch((error: AxiosError) => {
+      console.error(error);
+      return [];
+    });
+
 export const fetchVideo = async (assetId: Video["assetId"], token: string) =>
   api
     .get<ApiVideo>(`/videos/${assetId}`, {
@@ -97,10 +110,17 @@ export const deleteByAssetId = (token: string, assetId: string) =>
     },
   });
 
+export const deletePermanentlyByAssetId = (token: string, assetId: string) =>
+  api.delete<unknown>(`/videos/${assetId}?permanent=true`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
 export const update = async (
   token: string,
   assetId: string,
-  title: string,
+  title?: string,
   isPrivate?: boolean,
   deletedAt?: Date | null,
 ): Promise<Video | null> =>

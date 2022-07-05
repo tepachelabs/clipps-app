@@ -6,13 +6,15 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import React from "react";
+import React, { useMemo } from "react";
 
 interface DeleteConfirmationProps {
   isOpen: boolean;
   items: unknown[];
   onAccept?: () => void;
   onCancel?: () => void;
+  title?: string;
+  description?: string;
 }
 
 export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
@@ -20,18 +22,27 @@ export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
   items,
   onAccept,
   onCancel,
+  title,
+  description,
 }: DeleteConfirmationProps) => {
-  const title =
-    items.length > 1
-      ? `Do you want to delete these ${items.length} videos?`
-      : "Do you want to delete this clip?";
+  const defaultTitle = useMemo(
+    () =>
+      items.length > 1
+        ? `Do you want to delete these ${items.length} videos?`
+        : "Do you want to delete this clip?",
+    [items.length],
+  );
+  const defaultDescription = useMemo(
+    () => `Your ${items.length > 1 ? "files" : "file"} will be moved to the trash bin.`,
+    [items.length],
+  );
 
   return (
     <Dialog open={isOpen} onClose={onCancel}>
-      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+      <DialogTitle id="alert-dialog-title">{title || defaultTitle}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          Your file{items.length > 1 && "s"} will be moved to the trash bin.
+          {description || defaultDescription}
         </DialogContentText>
       </DialogContent>
       <DialogActions>

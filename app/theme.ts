@@ -58,6 +58,7 @@ const theme = createTheme({
           props: { variant: "muted" },
           style: {
             backgroundColor: grey[50],
+            border: `1px solid ${grey[300]}`,
           },
         },
       ],

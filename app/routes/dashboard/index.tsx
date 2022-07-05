@@ -1,7 +1,7 @@
-import { Grid } from "@mui/material";
+import { Badge, Button, Grid } from "@mui/material";
 import type { ActionFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useFetcher, useLoaderData } from "@remix-run/react";
+import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import React from "react";
 
 import { getProfile } from "~/api/profile.service";
@@ -11,7 +11,7 @@ import { VideoCard } from "~/components/atoms/video-card";
 import { VideoList } from "~/components/molecules/video-list";
 import { Layout } from "~/components/organisms/layout";
 import { VideoUpload } from "~/components/organisms/video-upload";
-import { ACTION } from "~/constants";
+import { ACTION, PATHS } from "~/constants";
 import type { Profile, Video } from "~/models";
 import { requireToken } from "~/utils/session.server";
 
@@ -47,6 +47,12 @@ export const action: ActionFunction = async ({ request }) => {
   }
 };
 
+const styles = {
+  badge: {
+    zIndex: 99,
+  },
+};
+
 export const meta: MetaFunction = () => ({
   title: "Dashboard - Clipps",
   description:
@@ -64,7 +70,7 @@ export const meta: MetaFunction = () => ({
   // "twitter:card": data.video.posterUrl,
 });
 
-export default function Dashboard() {
+export default function DashboardIndex() {
   const loaderData = useLoaderData<LoaderData>();
   const fetcher = useFetcher<LoaderData>();
 
@@ -101,6 +107,18 @@ export default function Dashboard() {
             )}
             onDeleteItems={onDelete}
             videos={data.videos}
+            additionalControls={
+              <Badge
+                badgeContent={data.profile?.videosInTrash}
+                color="primary"
+                max={9}
+                sx={styles.badge}
+              >
+                <Button variant="outlined" component={Link} to={PATHS.TRASH}>
+                  View trash
+                </Button>
+              </Badge>
+            }
           />
         </Grid>
       </Grid>

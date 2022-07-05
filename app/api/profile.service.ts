@@ -8,6 +8,7 @@ export interface ApiProfile {
   username?: string;
   avatar?: string;
   bytes_used?: string;
+  videos_in_trash?: number;
 }
 
 const castDataToProfile = (data: ApiProfile): Profile => {
@@ -15,6 +16,7 @@ const castDataToProfile = (data: ApiProfile): Profile => {
     username: data.username,
     avatar: data.avatar,
     bytesUsed: data.bytes_used,
+    videosInTrash: data.videos_in_trash,
   } as Profile;
 };
 

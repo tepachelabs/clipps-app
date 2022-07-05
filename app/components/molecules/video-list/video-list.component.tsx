@@ -13,13 +13,16 @@ interface VideoListProps {
   ItemRenderer: (props: VideoCardProps) => JSX.Element;
   onDeleteItems?: (videos: Video[], callback?: () => void) => Promise<void>;
   videos: Video[];
+  onDeleteTitle?: string;
+  onDeleteDescription?: string;
 }
 
 const getFiltered = (videos: Video[], searchQuery: string): Video[] =>
   videos.filter((video) => video.title.toLowerCase().includes(searchQuery.toLowerCase()));
 
 const styles = {
-  additionalControls: { alignSelf: "flex-end" },
+  card: { overflow: "visible" },
+  additionalControls: { alignSelf: "auto" },
 };
 
 export const VideoList: React.FC<VideoListProps> = ({
@@ -28,6 +31,8 @@ export const VideoList: React.FC<VideoListProps> = ({
   ItemRenderer,
   onDeleteItems,
   videos,
+  onDeleteTitle,
+  onDeleteDescription,
 }: VideoListProps) => {
   const [selection, setSelection] = useState<Video[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -82,9 +87,11 @@ export const VideoList: React.FC<VideoListProps> = ({
         items={selection}
         onAccept={onDeleteAccept}
         onCancel={onDeleteCancel}
+        title={onDeleteTitle}
+        description={onDeleteDescription}
       />
       <Grid item xs={12}>
-        <Card variant="outlined">
+        <Card variant="outlined" sx={styles.card}>
           {selection.length ? (
             <Stack direction="row" spacing={2} alignItems="center" p={1} pl={2} height={56}>
               <Typography gutterBottom={false}>{selectionLabel}</Typography>
@@ -99,7 +106,13 @@ export const VideoList: React.FC<VideoListProps> = ({
               </Button>
             </Stack>
           ) : (
-            <Stack direction="row" spacing={2} justifyContent="space-between" p={1}>
+            <Stack
+              direction="row"
+              spacing={2}
+              justifyContent="space-between"
+              p={1}
+              alignItems="center"
+            >
               <TextField
                 label="Filter..."
                 variant="outlined"
