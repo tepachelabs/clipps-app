@@ -1,6 +1,5 @@
-import type { AxiosError } from "axios";
-
 import type { Profile } from "~/models";
+import { reportError } from "~/utils/catch-network-error";
 
 import { api } from "./http.service";
 
@@ -30,10 +29,7 @@ export const getProfile = async (token: string): Promise<Profile | null> =>
       },
     })
     .then(({ data }) => parseProfileEntity(data))
-    .catch((error: AxiosError) => {
-      console.error(error);
-      return null;
-    });
+    .catch(reportError);
 
 export const updateProfile = async (
   token: string,
@@ -51,8 +47,5 @@ export const updateProfile = async (
       },
     )
     .then(({ data }) => parseProfileEntity(data))
-    .catch((error: AxiosError) => {
-      console.error(error);
-      return null;
-    });
+    .catch(reportError);
 };

@@ -1,7 +1,7 @@
 import type { AxiosRequestConfig } from "axios";
-import type { AxiosError } from "axios";
 
 import type { Video } from "~/models";
+import { reportError } from "~/utils/catch-network-error";
 
 import { api } from "./http.service";
 
@@ -46,10 +46,7 @@ export const fetchVideos = async (token: string) =>
       },
     })
     .then(({ data }) => parseVideoEntities(data))
-    .catch((error: AxiosError) => {
-      console.error(error);
-      return [];
-    });
+    .catch(reportError);
 
 export const fetchDeletedVideos = async (token: string) =>
   api
@@ -59,10 +56,7 @@ export const fetchDeletedVideos = async (token: string) =>
       },
     })
     .then(({ data }) => parseVideoEntities(data))
-    .catch((error: AxiosError) => {
-      console.error(error);
-      return [];
-    });
+    .catch(reportError);
 
 export const fetchVideo = async (assetId: Video["assetId"], token: string) =>
   api
@@ -72,19 +66,13 @@ export const fetchVideo = async (assetId: Video["assetId"], token: string) =>
       },
     })
     .then(({ data }) => parseVideoEntity(data))
-    .catch((error: AxiosError) => {
-      console.error(error);
-      return null;
-    });
+    .catch(reportError);
 
 export const fetchVideoAnonymously = async (assetId: Video["assetId"]) =>
   api
     .get<ApiVideo>(`/video/${assetId}`)
     .then(({ data }) => parseVideoEntity(data))
-    .catch((error: AxiosError) => {
-      console.error(error);
-      return null;
-    });
+    .catch(reportError);
 
 export const uploadVideo = (
   token: string,
@@ -135,7 +123,4 @@ export const update = async (
       },
     )
     .then(({ data }) => parseVideoEntity(data))
-    .catch((error: AxiosError) => {
-      console.error(error);
-      return null;
-    });
+    .catch(reportError);

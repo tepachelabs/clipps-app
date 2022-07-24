@@ -31,8 +31,10 @@ const Document = withEmotionCache(({ children, title }: DocumentProps, emotionCa
     const tags = emotionCache.sheet.tags;
     emotionCache.sheet.flush();
     tags.forEach((tag) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
-      (emotionCache.sheet as any)._insertTag(tag);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      (emotionCache.sheet as never)._insertTag(tag);
     });
     clientStyleData.reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -13,24 +13,25 @@ import { Layout } from "~/components/organisms/layout";
 import { VideoUpload } from "~/components/organisms/video-upload";
 import { ACTION, PATHS } from "~/constants";
 import type { Profile, Video } from "~/models";
-import { requireToken } from "~/utils/session.server";
+import { logout, requireToken } from "~/utils/session.server";
 
 type LoaderData = {
   profile: Profile | null;
   token: string;
-  videos: Video[];
+  videos: Video[] | null;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
   const token = await requireToken(request);
-  const [videos, profile] = await Promise.all([fetchVideos(token), getProfile(token)]);
 
-  const data: LoaderData = {
-    profile,
-    token,
-    videos,
-  };
-  return json(data);
+  try {
+    const [profile, videos] = await Promise.all([getProfile(token), fetchVideos(token)]);
+    const data: LoaderData = { profile, token, videos };
+
+    return json(data);
+  } catch (e) {
+    return logout(request);
+  }
 };
 
 export const action: ActionFunction = async ({ request }) => {
@@ -75,6 +76,7 @@ export default function DashboardIndex() {
   const fetcher = useFetcher<LoaderData>();
 
   const data = fetcher.data || loaderData;
+  // console.log(data);
 
   const onUploadComplete = () => {
     fetcher.load("/dashboard?index");
@@ -90,7 +92,7 @@ export default function DashboardIndex() {
   };
 
   return (
-    <Layout profile={data.profile}>
+    <Layout profile={data.profile || null}>
       <Grid item container spacing={3} xs={12}>
         <Grid item xs={12}>
           <VideoUpload token={data.token} onUploaded={onUploadComplete} />
@@ -106,7 +108,7 @@ export default function DashboardIndex() {
               />
             )}
             onDeleteItems={onDelete}
-            videos={data.videos}
+            videos={data.videos || []}
             additionalControls={
               <Badge
                 badgeContent={data.profile?.videosInTrash}

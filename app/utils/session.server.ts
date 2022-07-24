@@ -1,5 +1,7 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
 
+import { PATHS } from "~/constants";
+
 const sessionSecret = process.env.SESSION_SECRET;
 
 const storage = createCookieSessionStorage({
@@ -49,14 +51,14 @@ export const requireToken = async (
   if (!token || typeof token !== "string") {
     const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    throw redirect(`/login?${searchParams}`);
+    throw redirect(`${PATHS.LOGIN}?${searchParams}`);
   }
   return token;
 };
 
 export const logout = async (request: Request) => {
   const session = await getUserSession(request);
-  return redirect("/login", {
+  return redirect(PATHS.LOGIN, {
     headers: {
       "Set-Cookie": await storage.destroySession(session),
     },

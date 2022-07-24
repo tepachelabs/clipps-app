@@ -12,24 +12,24 @@ import { VideoList } from "~/components/molecules/video-list";
 import { Layout } from "~/components/organisms/layout";
 import { ACTION, PATHS } from "~/constants";
 import type { Profile, Video } from "~/models";
-import { requireToken } from "~/utils/session.server";
+import { logout, requireToken } from "~/utils/session.server";
 
 type LoaderData = {
   profile: Profile | null;
   token: string;
-  videos: Video[];
+  videos: Video[] | null;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
   const token = await requireToken(request);
-  const [videos, profile] = await Promise.all([fetchDeletedVideos(token), getProfile(token)]);
 
-  const data: LoaderData = {
-    profile,
-    token,
-    videos,
-  };
-  return json(data);
+  try {
+    const [videos, profile] = await Promise.all([fetchDeletedVideos(token), getProfile(token)]);
+    const data: LoaderData = { profile, token, videos };
+    return json(data);
+  } catch (e) {
+    return logout(request);
+  }
 };
 
 export const action: ActionFunction = async ({ request }) => {
@@ -88,7 +88,6 @@ export default function DashboardTrash() {
       { action: ACTION.PATCH, videos: JSON.stringify([video.assetId]) },
       { method: "post" },
     );
-    return Promise.resolve();
   };
 
   return (
@@ -109,7 +108,7 @@ export default function DashboardTrash() {
               />
             )}
             onDeleteItems={onDelete}
-            videos={data.videos}
+            videos={data.videos || []}
             additionalControls={
               <Button variant="outlined" component={Link} to={PATHS.DASHBOARD}>
                 Back to dashboard

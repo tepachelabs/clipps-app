@@ -3,25 +3,17 @@ import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
-import { getProfile } from "~/api/profile.service";
 import { Layout } from "~/components/organisms/layout";
 import type { Profile } from "~/models";
-import { getToken } from "~/utils/session.server";
+import { requestProfile } from "~/utils/data-loader";
 
 type LoaderData = {
   profile: Profile | null;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const token = await getToken(request);
-  let profile = null;
-
-  if (token) {
-    profile = await getProfile(token);
-  }
-
-  const data: LoaderData = { profile };
-  return json(data);
+  const profile = await requestProfile(request);
+  return json({ profile });
 };
 
 export const meta: MetaFunction = () => ({
